@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { t, currentLanguage } from '../i18n'
 
 const form = ref({
   name: '',
@@ -23,26 +24,26 @@ const validateForm = () => {
   let isValid = true
 
   if (!form.value.name.trim()) {
-    errors.value.name = 'Vārds ir obligāts!'
+    errors.value.name = t('nameRequired')
     isValid = false
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!form.value.email.trim()) {
-    errors.value.email = 'E-pasts ir obligāts!'
+    errors.value.email = t('emailRequired')
     isValid = false
   } else if (!emailRegex.test(form.value.email.trim())) {
-    errors.value.email = 'E-pasta adrese nav derīga!'
+    errors.value.email = t('invalidEmail')
     isValid = false
   }
 
   if (!form.value.subject.trim()) {
-    errors.value.subject = 'Temats ir obligāts!'
+    errors.value.subject = t('subjectRequired')
     isValid = false
   }
 
   if (!form.value.message.trim()) {
-    errors.value.message = 'Ziņojums ir obligāts!'
+    errors.value.message = t('messageRequired')
     isValid = false
   }
 
@@ -70,17 +71,17 @@ const submitForm = async () => {
     const result = await response.json()
 
     if (!response.ok) {
-      throw new Error(result?.message || 'Neizdevās nosūtīt ziņojumu.')
+      throw new Error(result?.message || t('failedToSend'))
     }
 
-    successMessage.value = `✓ ${result.message || 'Paldies! Ziņojums nosūtīts.'}`
+    successMessage.value = `✓ ${result.message || t('messageSent')}`
 
     setTimeout(() => {
       form.value = { name: '', email: '', subject: '', message: '' }
       successMessage.value = ''
     }, 3000)
   } catch (error) {
-    successMessage.value = error?.message || 'Kļūda nosūtot ziņojumu.'
+    successMessage.value = error?.message || t('failedToSend')
   }
 }
 </script>
@@ -89,10 +90,9 @@ const submitForm = async () => {
   <main class="container">
     <!-- Hero Section -->
     <section class="hero">
-      <h1>📧 Sazinieties ar mums</h1>
+      <h1>{{ t('contactTitle') }}</h1>
       <p>
-        Mums ir svarīga jūsu atgriezeniskā saite! Lūdzu, aizpildiet zemāk esošo formu,
-        un mēs ar jums sazināsimies pēc iespējas ātrāk.
+        {{ t('contactSubtitle') }}
       </p>
     </section>
 
@@ -101,26 +101,26 @@ const submitForm = async () => {
       <h2>Sūtīt ziņojumu</h2>
       <form id="contactForm" class="contact-form" @submit.prevent="submitForm">
         <div class="form-group">
-          <label for="name">Vārds:</label>
+          <label for="name">{{ t('name') }}:</label>
           <input type="text" id="name" name="name" v-model="form.name" required>
           <span class="error-message" id="nameError">{{ errors.name }}</span>
         </div>
         <div class="form-group">
-          <label for="email">E-pasts:</label>
+          <label for="email">{{ t('email') }}:</label>
           <input type="email" id="email" name="email" v-model="form.email" required>
           <span class="error-message" id="emailError">{{ errors.email }}</span>
         </div>
         <div class="form-group">
-          <label for="subject">Temats:</label>
+          <label for="subject">{{ t('subject') }}:</label>
           <input type="text" id="subject" name="subject" v-model="form.subject" required>
           <span class="error-message" id="subjectError">{{ errors.subject }}</span>
         </div>
         <div class="form-group">
-          <label for="message">Ziņojums:</label>
+          <label for="message">{{ t('message') }}:</label>
           <textarea id="message" name="message" rows="8" v-model="form.message" required></textarea>
           <span class="error-message" id="messageError">{{ errors.message }}</span>
         </div>
-        <button type="submit" class="submit-btn">Nosūtīt</button>
+        <button type="submit" class="submit-btn">{{ t('send') }}</button>
         <div class="success-message" :class="{ show: successMessage }" id="successMessage">
           {{ successMessage }}
         </div>
@@ -215,11 +215,11 @@ const submitForm = async () => {
           <div class="feature-item">
             <span class="feature-icon">📖</span>
             <h4>
-              <RouterLink to="/about" style="color: var(--primary-color); text-decoration: none;">
-                Par mums
+              <RouterLink to="/missions" style="color: var(--primary-color); text-decoration: none;">
+                Misijas
               </RouterLink>
             </h4>
-            <p>Uzzināt vairāk par projektu</p>
+            <p>Pāriet uz misiju informāciju un uzdevumiem</p>
           </div>
           <div class="feature-item">
             <span class="feature-icon">📊</span>

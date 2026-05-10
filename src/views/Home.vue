@@ -1,145 +1,119 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { t, currentLanguage } from '../i18n'
+import { user } from '../auth'
+import { userScore, leaderboard } from '../scores'
+import { boardMessages, postBoardMessage } from '../messageBoard'
 
-const form = ref({
-  name: '',
-  email: '',
-  subject: '',
+const router = useRouter()
+
+const messageBoardOpen = ref(false)
+const boardForm = ref({
   message: ''
 })
-
-const errors = ref({
-  name: '',
-  email: '',
-  subject: '',
+const boardErrors = ref({
   message: ''
 })
+const boardStatus = ref('')
+const posterName = computed(() => user.value?.name || (currentLanguage.value === 'lv' ? 'Viesis' : 'Visitor'))
 
-const successMessage = ref('')
+const formattedBoardMessages = computed(() => {
+  return boardMessages.value.map((entry) => ({
+    ...entry,
+    date: new Date(entry.createdAt).toLocaleString(currentLanguage.value === 'lv' ? 'lv-LV' : 'en-GB')
+  }))
+})
 
-const validateForm = () => {
-  errors.value = { name: '', email: '', subject: '', message: '' }
-
-  let isValid = true
-
-  if (!form.value.name.trim()) {
-    errors.value.name = 'Vārds ir obligāts!'
-    isValid = false
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!form.value.email.trim()) {
-    errors.value.email = 'E-pasts ir obligāts!'
-    isValid = false
-  } else if (!emailRegex.test(form.value.email.trim())) {
-    errors.value.email = 'E-pasta adrese nav derīga!'
-    isValid = false
-  }
-
-  if (!form.value.subject.trim()) {
-    errors.value.subject = 'Temats ir obligāts!'
-    isValid = false
-  }
-
-  if (!form.value.message.trim()) {
-    errors.value.message = 'Ziņojums ir obligāts!'
-    isValid = false
-  }
-
-  return isValid
+const getRoleEmoji = (role) => {
+  if (role === 'admin') return '👑'
+  if (role === 'user') return '👤'
+  return ''
 }
 
-const submitForm = async () => {
-  successMessage.value = ''
-  if (!validateForm()) return
+const submitBoardMessage = () => {
+  boardErrors.value = { message: '' }
+  boardStatus.value = ''
 
-  try {
-    const response = await fetch('http://localhost:8000/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: form.value.name.trim(),
-        email: form.value.email.trim(),
-        subject: form.value.subject.trim(),
-        message: form.value.message.trim()
-      })
-    })
-
-    const result = await response.json()
-
-    if (!response.ok) {
-      throw new Error(result?.message || 'Neizdevās nosūtīt ziņojumu.')
-    }
-
-    successMessage.value = `✓ ${result.message || 'Paldies! Ziņojums nosūtīts.'}`
-
-    setTimeout(() => {
-      form.value = { name: '', email: '', subject: '', message: '' }
-      successMessage.value = ''
-    }, 3000)
-  } catch (error) {
-    successMessage.value = error?.message || 'Kļūda nosūtot ziņojumu.'
+  if (!boardForm.value.message.trim()) {
+    boardErrors.value.message = t('messageRequired')
   }
+
+  if (boardErrors.value.message) return
+
+  postBoardMessage({
+    name: posterName.value,
+    message: boardForm.value.message.trim(),
+    role: user.value?.role || 'visitor'
+  })
+  boardForm.value = { message: '' }
+  boardStatus.value = currentLanguage.value === 'lv'
+    ? 'Ziņa pievienota ziņojumu dēlim.'
+    : 'Message added to the board.'
 }
 
-const games = [
+const games = computed(() => [
   {
-    title: 'Loģikas Labirints',
-    description: 'Mācies plānot soļus un atrisini labirinta uzdevumus.',
+    slug: 'logic-maze',
+    title: t('logicMaze'),
+    description: t('learnSteps'),
     icon: '🧩',
     color: '#9b59b6'
   },
   {
-    title: 'Robotu Izaicinājums',
-    description: 'Programmē robotu ar komandām un savāc enerģiju.',
+    slug: 'robot-challenge',
+    title: t('robotChallenge'),
+    description: t('programRobot'),
     icon: '🤖',
     color: '#e74c3c'
   },
   {
-    title: 'Krāsu Kods',
-    description: 'Sajauc krāsas, lai atbloķētu noslēpumus.',
+    slug: 'color-code',
+    title: t('colorCode'),
+    description: t('mixColors'),
     icon: '🎨',
     color: '#3498db'
   },
   {
-    title: 'Matemātikas Misija',
-    description: 'Atrisini īsos uzdevumus un uzkrāj punktus.',
+    slug: 'math-mission',
+    title: t('mathMission'),
+    description: t('solveQuests'),
     icon: '🔢',
     color: '#f39c12'
   },
   {
-    title: 'Ģeogrāfijas Ceļojums',
-    description: 'Atpazīsti valstis un atklāj jaunas vietas.',
+    slug: 'geo-journey',
+    title: t('geoJourney'),
+    description: t('recognizeCountries'),
     icon: '🌍',
     color: '#2ecc71'
   },
   {
-    title: 'Vārdu Varonis',
-    description: 'Veido vārdus un uzlabo valodas prasmes.',
+    slug: 'word-hero',
+    title: t('wordHero'),
+    description: t('buildWords'),
     icon: '📚',
     color: '#e91e63'
   }
-]
+])
 
-const quizQuestions = [
+const quizQuestions = computed(() => [
   {
-    question: 'Kura komanda atkārto darbību vairākas reizes?',
+    question: t('whichCommand'),
     options: ['Loop', 'Click', 'Color', 'Save'],
     answer: 0
   },
   {
-    question: 'Cik ir 8 + 6?',
+    question: t('whatIs8Plus6'),
     options: ['12', '13', '14', '15'],
     answer: 2
   },
   {
-    question: 'Kura ir okeāna valsts?',
+    question: t('oceanCountry'),
     options: ['Latvija', 'Norvēģija', 'Japāna', 'Austrija'],
     answer: 2
   }
-]
+])
 
 const quizStarted = ref(false)
 const quizComplete = ref(false)
@@ -174,8 +148,8 @@ const nextQuestion = () => {
   selectedAnswer.value = null
 }
 
-const playGame = () => {
-  window.alert('Spēle tiek sagatavota! Drīzumā būs pieejama 🎮')
+const openGameCategory = (slug) => {
+  router.push({ name: 'game-category', params: { slug } })
 }
 </script>
 
@@ -183,39 +157,8 @@ const playGame = () => {
   <main class="container">
     <!-- Hero Section -->
     <section id="home" class="hero">
-      <h1>🐉 Dragons Den</h1>
-      <p class="subtitle">Spēlē, mācies un trenē prasmes katru dienu.</p>
-      <div style="margin-top: 1.5rem;">
-        <a href="#games" class="create-btn" style="text-decoration: none;">Spēlēt tagad</a>
-      </div>
-    </section>
-
-    <!-- Navigation Cards -->
-    <section class="content-section">
-      <h2>🧭 Izvēlies sadaļu</h2>
-      <div class="platform-cards">
-        <RouterLink to="/" class="card" style="text-decoration: none; color: inherit; border-top: 4px solid #9b59b6;">
-          <div class="card-content">
-            <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🏠</div>
-            <h3>Sākums</h3>
-            <p>Spēļu starta zona un ātrā viktorīna.</p>
-          </div>
-        </RouterLink>
-        <RouterLink to="/about" class="card" style="text-decoration: none; color: inherit; border-top: 4px solid #e74c3c;">
-          <div class="card-content">
-            <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🎮</div>
-            <h3>Spēles</h3>
-            <p>Apskati spēļu bibliotēku un sasniegumus.</p>
-          </div>
-        </RouterLink>
-        <RouterLink to="/technical" class="card" style="text-decoration: none; color: inherit; border-top: 4px solid #3498db;">
-          <div class="card-content">
-            <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">📘</div>
-            <h3>Mācīties</h3>
-            <p>Izvēlies mācību misijas un uzdevumus.</p>
-          </div>
-        </RouterLink>
-      </div>
+      <h1>{{ t('heroTitle') }}</h1>
+      <p class="subtitle">{{ t('heroSubtitle') }}</p>
     </section>
 
     <!-- Games Section -->
@@ -236,85 +179,93 @@ const playGame = () => {
             <h3>{{ game.title }}</h3>
             <p>{{ game.description }}</p>
             <div class="card-buttons">
-              <button class="card-btn learn-more-btn" type="button" @click="playGame">Sākt</button>
+              <button class="card-btn learn-more-btn" type="button" @click="openGameCategory(game.slug)">
+                {{ currentLanguage === 'lv' ? 'Atvērt sarakstu' : 'Open list' }}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Quick Quiz Section -->
-    <section class="content-section">
-      <h2>⚡ Ātrais prāta duelis</h2>
+
+
+    <!-- Leaderboard Section -->
+    <section v-if="user" class="content-section">
+      <h2>🏆 Rezultātu tabula</h2>
       <div class="concept-box">
-        <div v-if="!quizStarted">
-          <p>Atbildi uz 3 jautājumiem un nopelni savu pūķa nozīmīti.</p>
-          <button class="create-btn" type="button" @click="startQuiz">Sākt viktorīnu</button>
+        <div v-if="user.role !== 'visitor'" style="margin-bottom: 1rem; font-size: 1.1rem;">
+          Tavi punkti: <strong style="color: var(--primary-color); font-size: 1.4rem;">{{ userScore ?? 0 }} ⭐</strong>
         </div>
-
-        <div v-else-if="!quizComplete">
-          <h3>{{ currentQuestion.question }}</h3>
-          <div class="features-grid" style="margin-top: 1rem;">
-            <button
-              v-for="(option, index) in currentQuestion.options"
-              :key="option"
-              class="card-btn"
-              type="button"
-              :style="{
-                background: selectedAnswer === index
-                  ? (index === currentQuestion.answer ? 'linear-gradient(135deg, #2ecc71, #27ae60)' : 'linear-gradient(135deg, #e74c3c, #c0392b)')
-                  : 'var(--purple-gradient)',
-                color: 'white'
-              }"
-              @click="selectAnswer(index)"
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--primary-color);">
+              <th style="text-align: left; padding: 0.5rem;">#</th>
+              <th style="text-align: left; padding: 0.5rem;">Lietotājs</th>
+              <th style="text-align: right; padding: 0.5rem;">Punkti ⭐</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(entry, index) in leaderboard"
+              :key="entry.email"
+              :style="{ background: entry.email === user?.email ? 'rgba(155,89,182,0.15)' : 'transparent', borderBottom: '1px solid rgba(155,89,182,0.2)' }"
             >
-              {{ option }}
-            </button>
-          </div>
-          <div style="margin-top: 1.5rem;">
-            <button class="create-btn" type="button" @click="nextQuestion" :disabled="selectedAnswer === null">
-              Nākamais
-            </button>
-          </div>
-        </div>
-
-        <div v-else>
-          <h3>Gatavs! Tavs rezultāts: {{ score }}/{{ quizQuestions.length }}</h3>
-          <p>Super! Pievieno vēl vienu misiju vai sāc no jauna.</p>
-          <button class="create-btn" type="button" @click="startQuiz">Spēlēt vēlreiz</button>
-        </div>
+              <td style="padding: 0.6rem 0.5rem; font-weight: bold;">{{ index + 1 }}</td>
+              <td style="padding: 0.6rem 0.5rem;">{{ entry.email }}</td>
+              <td style="padding: 0.6rem 0.5rem; text-align: right; font-weight: bold;">{{ entry.score }}</td>
+            </tr>
+            <tr v-if="leaderboard.length === 0">
+              <td colspan="3" style="padding: 1rem; text-align: center; opacity: 0.6;">Nav punktu vēl.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- Contact Form Section -->
-    <section id="contact" class="content-section">
-      <h2>📧 Sazinieties ar mums</h2>
-      <form id="contactForm" class="contact-form" @submit.prevent="submitForm">
-        <div class="form-group">
-          <label for="name">Vārds:</label>
-          <input type="text" id="name" name="name" v-model="form.name" required>
-          <span class="error-message" id="nameError">{{ errors.name }}</span>
-        </div>
-        <div class="form-group">
-          <label for="email">E-pasts:</label>
-          <input type="email" id="email" name="email" v-model="form.email" required>
-          <span class="error-message" id="emailError">{{ errors.email }}</span>
-        </div>
-        <div class="form-group">
-          <label for="subject">Temats:</label>
-          <input type="text" id="subject" name="subject" v-model="form.subject" required>
-          <span class="error-message" id="subjectError">{{ errors.subject }}</span>
-        </div>
-        <div class="form-group">
-          <label for="message">Ziņojums:</label>
-          <textarea id="message" name="message" rows="8" v-model="form.message" required></textarea>
-          <span class="error-message" id="messageError">{{ errors.message }}</span>
-        </div>
-        <button type="submit" class="submit-btn">Nosūtīt</button>
-        <div class="success-message" :class="{ show: successMessage }" id="successMessage">
-          {{ successMessage }}
-        </div>
-      </form>
+    <section class="content-section" style="text-align: center;">
+      <h2>{{ currentLanguage === 'lv' ? '📌 Ziņojumu dēlis' : '📌 Message Board' }}</h2>
+      <p>{{ currentLanguage === 'lv' ? 'Atver sānjoslu, lai atstātu ziņu mums un citiem lietotājiem.' : 'Open the sidebar to leave a message for us and other users.' }}</p>
+      <button class="create-btn" type="button" @click="messageBoardOpen = true">
+        {{ currentLanguage === 'lv' ? 'Atvērt ziņojumu dēli' : 'Open message board' }}
+      </button>
     </section>
+
+    <section class="content-section" style="text-align: center; margin-top: 1rem;">
+      <RouterLink to="/missions" class="create-btn" style="text-decoration: none; display: inline-block;">
+        {{ currentLanguage === 'lv' ? 'Misijas' : 'Missions' }}
+      </RouterLink>
+    </section>
+
+    <div v-if="messageBoardOpen" class="message-board-backdrop" @click="messageBoardOpen = false"></div>
+    <aside class="message-board-sidebar" :class="{ open: messageBoardOpen }">
+      <div class="message-board-header">
+        <h3>{{ currentLanguage === 'lv' ? 'Ziņojumu dēlis' : 'Message Board' }}</h3>
+        <button class="message-board-close" type="button" @click="messageBoardOpen = false">✕</button>
+      </div>
+
+      <form class="contact-form" @submit.prevent="submitBoardMessage">
+        <div class="form-group">
+          <label for="board-message">{{ t('message') }}</label>
+          <textarea id="board-message" rows="4" v-model="boardForm.message"></textarea>
+          <span class="error-message">{{ boardErrors.message }}</span>
+        </div>
+        <button type="submit" class="submit-btn">{{ currentLanguage === 'lv' ? 'Publicēt' : 'Post' }}</button>
+        <div class="success-message" :class="{ show: boardStatus }">{{ boardStatus }}</div>
+      </form>
+
+      <div class="message-board-list">
+        <p v-if="formattedBoardMessages.length === 0" style="opacity: 0.7;">
+          {{ currentLanguage === 'lv' ? 'Pagaidām ziņu nav.' : 'No messages yet.' }}
+        </p>
+        <article v-for="entry in formattedBoardMessages" :key="entry.id" class="message-board-item">
+          <div class="message-board-meta">
+            <strong>{{ getRoleEmoji(entry.role) }} {{ entry.name }}</strong>
+            <span>{{ entry.date }}</span>
+          </div>
+          <p>{{ entry.message }}</p>
+        </article>
+      </div>
+    </aside>
   </main>
 </template>
