@@ -1,12 +1,20 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { t, currentLanguage } from '../i18n'
+import { user } from '../auth'
 
 const form = ref({
   name: '',
   email: '',
   subject: '',
   message: ''
+})
+
+watchEffect(() => {
+  if (user.value) {
+    form.value.name = user.value.name || ''
+    form.value.email = user.value.email || ''
+  }
 })
 
 const errors = ref({
@@ -100,16 +108,8 @@ const submitForm = async () => {
     <section class="contact-section">
       <h2>Sūtīt ziņojumu</h2>
       <form id="contactForm" class="contact-form" @submit.prevent="submitForm">
-        <div class="form-group">
-          <label for="name">{{ t('name') }}:</label>
-          <input type="text" id="name" name="name" v-model="form.name" required>
-          <span class="error-message" id="nameError">{{ errors.name }}</span>
-        </div>
-        <div class="form-group">
-          <label for="email">{{ t('email') }}:</label>
-          <input type="email" id="email" name="email" v-model="form.email" required>
-          <span class="error-message" id="emailError">{{ errors.email }}</span>
-        </div>
+        <input type="hidden" name="name" v-model="form.name">
+        <input type="hidden" name="email" v-model="form.email">
         <div class="form-group">
           <label for="subject">{{ t('subject') }}:</label>
           <input type="text" id="subject" name="subject" v-model="form.subject" required>
@@ -127,120 +127,57 @@ const submitForm = async () => {
       </form>
     </section>
 
-    <!-- Contact Info Section -->
-    <section class="content-section">
-      <h2>Kontaktinformācija</h2>
-
-      <div class="features-grid">
-        <div class="feature-item">
-          <span class="feature-icon">🏫</span>
-          <h4>Izglītības iestāde</h4>
-          <p>Rīgas Valsts Tehnikums<br> Datorikas nodaļa</p>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">👨‍🎓</span>
-          <h4>Audzēknis</h4>
-          <p>Š. Tērmane<br> Programmēšanas tehniķis</p>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">📅</span>
-          <h4>Projekta gads</h4>
-          <p>2025<br> Referāta darbs</p>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">🌐</span>
-          <h4>GitHub</h4>
-          <p>
-            <a href="https://github.com/Scarletthedragon/dragons-den" target="_blank" style="color: var(--primary-color);">
-              dragons-den
-            </a>
-          </p>
-        </div>
-      </div>
-    </section>
-
     <!-- FAQ Section -->
     <section class="content-section">
-      <h2>❓ Biežāk uzdotie jautājumi</h2>
+      <h2>❓ {{ currentLanguage === 'lv' ? 'Biežāk uzdotie jautājumi' : 'Frequently Asked Questions' }}</h2>
 
       <div class="concept-box">
-        <h3>Kas ir Dragons Den?</h3>
+        <h3>{{ currentLanguage === 'lv' ? 'Cik ilgi jāgaida atbilde?' : 'How long until I get a reply?' }}</h3>
         <p>
-          Dragons Den ir izglītojošas izklaides spēļu mājaslapa, kas izstrādāta kā referāta darbs
-          Rīgas Valsts Tehnikumā. Projekts demonstrē mūsdienīgas web tehnoloģijas un izglītības
-          platformu analīzi.
+          {{ currentLanguage === 'lv'
+            ? 'Mēs cenšamies atbildēt uz visiem ziņojumiem 1–2 darba dienu laikā. Ja nepieciešama steidzama palīdzība, norādiet to ziņojuma tēmā.'
+            : 'We aim to respond to all messages within 1–2 business days. If your request is urgent, please mention it in the subject line.' }}
         </p>
       </div>
 
       <div class="concept-box">
-        <h3>Kādas tehnoloģijas tiek izmantotas?</h3>
+        <h3>{{ currentLanguage === 'lv' ? 'Ko rakstīt ziņojuma tēmā?' : 'What should I write in the subject?' }}</h3>
         <p>
-          Projekts izmanto HTML5, CSS3, JavaScript ES6+, NewsAPI integrāciju, localStorage, un ir
-          publicēts uz GitHub Pages. Dizains ietver purple rainbow tēmu ar dinamiskiem gradientiem
-          un animācijām.
+          {{ currentLanguage === 'lv'
+            ? 'Izvēlieties skaidru tēmu, piemēram: "Kļūda spēlē", "Jautājums par kontu" vai "Ieteikums". Tas palīdzēs mums ātrāk atbildēt.'
+            : 'Choose a clear subject like "Bug in game", "Account question", or "Suggestion". This helps us respond faster.' }}
         </p>
       </div>
 
       <div class="concept-box">
-        <h3>Vai varu izmantot šo projektu savām vajadzībām?</h3>
+        <h3>{{ currentLanguage === 'lv' ? 'Ko darīt, ja nevarēju pieteikties kontā?' : 'What if I cannot log into my account?' }}</h3>
         <p>
-          Projekts ir izveidots akadēmiskiem mērķiem. Ja vēlaties izmantot kodu vai idejas, lūdzu,
-          sazinieties ar mums, izmantojot kontaktformu augstāk.
+          {{ currentLanguage === 'lv'
+            ? 'Ja nevarat pieteikties, lūdzu, sazinieties ar mums, norādot savu lietotājvārdu. Mēs palīdzēsim atjaunot piekļuvi.'
+            : 'If you cannot log in, please contact us with your username and we will help restore your access.' }}
         </p>
       </div>
 
       <div class="concept-box">
-        <h3>Kā varu dot atsauksmi?</h3>
+        <h3>{{ currentLanguage === 'lv' ? 'Kā ziņot par kļūdu?' : 'How do I report a bug?' }}</h3>
         <p>
-          Mēs ļoti novērtējam jūsu atsauksmes! Lūdzu, aizpildiet kontaktformu augstāk vai atveriet
-          Issue GitHub repozitorijā.
+          {{ currentLanguage === 'lv'
+            ? 'Aizpildiet kontaktformu augstāk un aprakstiet kļūdu pēc iespējas sīkāk — kurā lapā tā notika un ko jūs darījāt pirms tam.'
+            : 'Fill in the contact form above and describe the bug in as much detail as possible — which page it occurred on and what you were doing beforehand.' }}
         </p>
       </div>
     </section>
 
-    <!-- Social Links -->
-    <section class="content-section">
-      <h2>🔗 Saites</h2>
-      <div class="concept-box">
-        <div class="features-grid">
-          <div class="feature-item">
-            <span class="feature-icon">🏠</span>
-            <h4>
-              <RouterLink to="/" style="color: var(--primary-color); text-decoration: none;">
-                Sākumlapa
-              </RouterLink>
-            </h4>
-            <p>Atgriezties uz galveno lapu</p>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📖</span>
-            <h4>
-              <RouterLink to="/missions" style="color: var(--primary-color); text-decoration: none;">
-                Misijas
-              </RouterLink>
-            </h4>
-            <p>Pāriet uz misiju informāciju un uzdevumiem</p>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📊</span>
-            <h4>
-              <RouterLink to="/#dashboard" style="color: var(--primary-color); text-decoration: none;">
-                Dashboard
-              </RouterLink>
-            </h4>
-            <p>Ziņu meklēšanas funkcija</p>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🔬</span>
-            <h4>
-              <RouterLink to="/#research" style="color: var(--primary-color); text-decoration: none;">
-                Pētniecība
-              </RouterLink>
-            </h4>
-            <p>Platformu analīzes rezultāti</p>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 </template>
+
+<style scoped>
+.submit-btn {
+  background: linear-gradient(135deg, #7c5cbf, #a07fd4) !important;
+  box-shadow: 0 4px 15px rgba(124, 92, 191, 0.25) !important;
+}
+.submit-btn:hover {
+  background: linear-gradient(135deg, #7c5cbf, #a07fd4) !important;
+  box-shadow: 0 6px 20px rgba(124, 92, 191, 0.35) !important;
+}
+</style>

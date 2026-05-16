@@ -170,7 +170,7 @@ const openGameCategory = (slug) => {
           v-for="game in games"
           :key="game.title"
           class="card"
-          :style="{ borderTop: `4px solid ${game.color}` }"
+          :style="{ borderTop: `4px solid ${game.color}`, '--card-color': game.color }"
         >
           <div class="card-content">
             <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">
@@ -179,7 +179,15 @@ const openGameCategory = (slug) => {
             <h3>{{ game.title }}</h3>
             <p>{{ game.description }}</p>
             <div class="card-buttons">
-              <button class="card-btn learn-more-btn" type="button" @click="openGameCategory(game.slug)">
+              <button
+                class="card-btn learn-more-btn"
+                type="button"
+                :style="{
+                  background: `linear-gradient(135deg, ${game.color}cc 0%, ${game.color} 100%)`,
+                  boxShadow: `0 4px 14px ${game.color}55`
+                }"
+                @click="openGameCategory(game.slug)"
+              >
                 {{ t('openList') }}
               </button>
             </div>
@@ -223,13 +231,23 @@ const openGameCategory = (slug) => {
       </div>
     </section>
 
-    <section class="content-section" style="text-align: center;">
-      <h2>{{ t('messageBoardTitle') }}</h2>
-      <p>{{ t('messageBoardDesc') }}</p>
-      <button class="create-btn" type="button" @click="messageBoardOpen = true">
-        {{ t('openMessageBoard') }}
-      </button>
-    </section>
+    <div class="two-col-sections">
+      <section class="content-section" style="text-align: center;">
+        <h2>{{ t('messageBoardTitle') }}</h2>
+        <p>{{ t('messageBoardDesc') }}</p>
+        <button class="create-btn" type="button" @click="messageBoardOpen = true">
+          {{ t('openMessageBoard') }}
+        </button>
+      </section>
+
+      <section class="content-section" style="text-align: center;">
+        <h2>{{ currentLanguage === 'lv' ? '📧 Sazināties ar mums' : '📧 Contact Us' }}</h2>
+        <p>{{ currentLanguage === 'lv' ? 'Jautājumi? Mēs esam šeit, lai palīdzētu.' : 'Questions? We are here to help.' }}</p>
+        <RouterLink to="/contact" class="create-btn" style="text-decoration: none; display: inline-block;">
+          {{ currentLanguage === 'lv' ? 'Atvērt kontaktformu' : 'Open contact form' }}
+        </RouterLink>
+      </section>
+    </div>
 
     <div v-if="messageBoardOpen" class="message-board-backdrop" @click="messageBoardOpen = false"></div>
     <aside class="message-board-sidebar" :class="{ open: messageBoardOpen }">
@@ -263,3 +281,17 @@ const openGameCategory = (slug) => {
     </aside>
   </main>
 </template>
+
+<style scoped>
+.two-col-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .two-col-sections {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

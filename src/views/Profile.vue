@@ -31,16 +31,16 @@ const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: 
 <template>
   <main class="container">
     <section class="hero">
-      <h1>👤 User Profile</h1>
-      <p class="subtitle">Your account information</p>
+      <h1>{{ t('profileTitle') }}</h1>
+      <p class="subtitle">{{ t('profileSubtitle') }}</p>
     </section>
 
     <section class="content-section" style="max-width: 600px; margin: 0 auto;">
       <div class="concept-box">
-        <h2>Profile Information</h2>
+        <h2>{{ t('profileInfo') }}</h2>
         <div style="margin: 2rem 0; padding: 1.5rem; background: var(--card-bg); border-radius: 10px;">
           <div v-if="user?.role !== 'visitor'" style="margin-bottom: 1.5rem;">
-            <label style="font-weight: bold; color: var(--primary-color);">Punkti:</label>
+            <label style="font-weight: bold; color: var(--primary-color);">{{ t('points') }}:</label>
             <p style="font-size: 1.5rem; margin-top: 0.5rem; font-weight: bold;">
               {{ userScore ?? 0 }} ⭐
             </p>
@@ -50,11 +50,11 @@ const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: 
             <p style="font-size: 1.1rem; margin-top: 0.5rem;">{{ user?.name }}</p>
           </div>
           <div style="margin-bottom: 1.5rem;">
-            <label style="font-weight: bold; color: var(--primary-color);">Email:</label>
+            <label style="font-weight: bold; color: var(--primary-color);">{{ t('email') }}:</label>
             <p style="font-size: 1.1rem; margin-top: 0.5rem;">{{ user?.email }}</p>
           </div>
           <div style="margin-bottom: 1.5rem;">
-            <label style="font-weight: bold; color: var(--primary-color);">Account Type:</label>
+            <label style="font-weight: bold; color: var(--primary-color);">{{ t('accountType') }}:</label>
             <p style="font-size: 1.1rem; margin-top: 0.5rem;">
               <span v-if="user?.role === 'admin'" style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
                 👑 {{ user?.role.toUpperCase() }}
@@ -67,13 +67,13 @@ const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: 
         </div>
 
         <div style="margin-top: 2rem;">
-          <h3>Account Actions</h3>
+          <h3>{{ t('accountActions') }}</h3>
           <button 
-            class="create-btn" 
+            class="create-btn logout-btn" 
             @click="handleLogout"
-            style="background: #e74c3c; margin-top: 1rem; width: 100%;"
+            style="margin-top: 1rem; width: 100%;"
           >
-            🚪 Logout
+            {{ t('logout') }}
           </button>
         </div>
 

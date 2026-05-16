@@ -105,34 +105,34 @@ const pageSubtitle = computed(() => {
 
 const categoryTests = {
   'logic-maze': [
-    { questionLv: 'Kurš skaitlis turpina secību 2, 4, 8, 16, ...?', questionEn: 'Which number continues the sequence 2, 4, 8, 16, ...?', options: ['18', '24', '32', '30'], answer: 2 },
-    { questionLv: 'Kurš ir nākamais burts: A, C, E, ...?', questionEn: 'Which letter comes next: A, C, E, ...?', options: ['F', 'G', 'H', 'I'], answer: 1 },
-    { questionLv: 'Ja visi roboti ir gudri, un Lina ir robots, Lina ir ...?', questionEn: 'If all robots are smart, and Lina is a robot, Lina is ...?', options: ['lēna', 'gudra', 'sarkana', 'jauna'], answer: 1 }
+    { questionLv: 'Kurš skaitlis turpina secību 2, 4, 8, 16, ...?', questionEn: 'Which number continues the sequence 2, 4, 8, 16, ...?', optionsLv: ['18', '24', '32', '30'], optionsEn: ['18', '24', '32', '30'], answer: 2 },
+    { questionLv: 'Kurš ir nākamais burts: A, C, E, ...?', questionEn: 'Which letter comes next: A, C, E, ...?', optionsLv: ['F', 'G', 'H', 'I'], optionsEn: ['F', 'G', 'H', 'I'], answer: 1 },
+    { questionLv: 'Ja visi roboti ir gudri, un Lina ir robots, Lina ir ...?', questionEn: 'If all robots are smart, and Lina is a robot, Lina is ...?', optionsLv: ['lēna', 'gudra', 'sarkana', 'jauna'], optionsEn: ['slow', 'smart', 'red', 'young'], answer: 1 }
   ],
   'robot-challenge': [
-    { questionLv: 'Kura komanda liek robotam iet uz priekšu?', questionEn: 'Which command moves a robot forward?', options: ['TURN', 'JUMP', 'MOVE', 'STOP'], answer: 2 },
-    { questionLv: 'Kas notiek, ja robots saņem STOP?', questionEn: 'What happens if a robot gets STOP?', options: ['Paātrinās', 'Apstājas', 'Pagriežas', 'Lec'], answer: 1 },
-    { questionLv: 'Labākā secība mērķim: uz priekšu, pa labi, uz priekšu?', questionEn: 'Best sequence to reach target: forward, right, forward?', options: ['MOVE-RIGHT-MOVE', 'LEFT-MOVE-RIGHT', 'STOP-MOVE-MOVE', 'RIGHT-STOP-MOVE'], answer: 0 }
+    { questionLv: 'Kura komanda liek robotam iet uz priekšu?', questionEn: 'Which command moves a robot forward?', optionsLv: ['TURN', 'JUMP', 'MOVE', 'STOP'], optionsEn: ['TURN', 'JUMP', 'MOVE', 'STOP'], answer: 2 },
+    { questionLv: 'Kas notiek, ja robots saņem STOP?', questionEn: 'What happens if a robot gets STOP?', optionsLv: ['Paātrinās', 'Apstājas', 'Pagriežas', 'Lec'], optionsEn: ['Speeds up', 'Stops', 'Turns', 'Jumps'], answer: 1 },
+    { questionLv: 'Labākā secība mērķim: uz priekšu, pa labi, uz priekšu?', questionEn: 'Best sequence to reach target: forward, right, forward?', optionsLv: ['MOVE-RIGHT-MOVE', 'LEFT-MOVE-RIGHT', 'STOP-MOVE-MOVE', 'RIGHT-STOP-MOVE'], optionsEn: ['MOVE-RIGHT-MOVE', 'LEFT-MOVE-RIGHT', 'STOP-MOVE-MOVE', 'RIGHT-STOP-MOVE'], answer: 0 }
   ],
   'color-code': [
-    { questionLv: 'Sarkans + zils = ?', questionEn: 'Red + blue = ?', options: ['Zaļš', 'Violets', 'Oranžs', 'Dzeltens'], answer: 1 },
-    { questionLv: 'Kura ir aukstā krāsa?', questionEn: 'Which is a cool color?', options: ['Sarkana', 'Oranža', 'Zila', 'Dzeltena'], answer: 2 },
-    { questionLv: 'Balts + melns rada ...?', questionEn: 'White + black makes ...?', options: ['Pelēku', 'Rozā', 'Brūnu', 'Zaļu'], answer: 0 }
+    { questionLv: 'Sarkans + zils = ?', questionEn: 'Red + blue = ?', optionsLv: ['Zaļš', 'Violets', 'Oranžs', 'Dzeltens'], optionsEn: ['Green', 'Violet', 'Orange', 'Yellow'], answer: 1 },
+    { questionLv: 'Kura ir aukstā krāsa?', questionEn: 'Which is a cool color?', optionsLv: ['Sarkana', 'Oranža', 'Zila', 'Dzeltena'], optionsEn: ['Red', 'Orange', 'Blue', 'Yellow'], answer: 2 },
+    { questionLv: 'Balts + melns rada ...?', questionEn: 'White + black makes ...?', optionsLv: ['Pelēku', 'Rozā', 'Brūnu', 'Zaļu'], optionsEn: ['Grey', 'Pink', 'Brown', 'Green'], answer: 0 }
   ],
   'math-mission': [
-    { questionLv: '7 + 8 = ?', questionEn: '7 + 8 = ?', options: ['14', '15', '16', '17'], answer: 1 },
-    { questionLv: '9 x 6 = ?', questionEn: '9 x 6 = ?', options: ['48', '52', '54', '56'], answer: 2 },
-    { questionLv: '36 / 4 = ?', questionEn: '36 / 4 = ?', options: ['8', '9', '10', '12'], answer: 1 }
+    { questionLv: '7 + 8 = ?', questionEn: '7 + 8 = ?', optionsLv: ['14', '15', '16', '17'], optionsEn: ['14', '15', '16', '17'], answer: 1 },
+    { questionLv: '9 x 6 = ?', questionEn: '9 x 6 = ?', optionsLv: ['48', '52', '54', '56'], optionsEn: ['48', '52', '54', '56'], answer: 2 },
+    { questionLv: '36 / 4 = ?', questionEn: '36 / 4 = ?', optionsLv: ['8', '9', '10', '12'], optionsEn: ['8', '9', '10', '12'], answer: 1 }
   ],
   'geo-journey': [
-    { questionLv: 'Latvijas galvaspilsēta ir ...?', questionEn: 'Capital of Latvia is ...?', options: ['Tallina', 'Rīga', 'Viļņa', 'Helsinki'], answer: 1 },
-    { questionLv: 'Kurš ir lielākais okeāns?', questionEn: 'Which is the largest ocean?', options: ['Atlantijas', 'Indijas', 'Arktikas', 'Klusais'], answer: 3 },
-    { questionLv: 'Eiropa ir ...?', questionEn: 'Europe is a ...?', options: ['Valsts', 'Pilsēta', 'Kontinents', 'Sala'], answer: 2 }
+    { questionLv: 'Latvijas galvaspilsēta ir ...?', questionEn: 'Capital of Latvia is ...?', optionsLv: ['Tallina', 'Rīga', 'Viļņa', 'Helsinki'], optionsEn: ['Tallinn', 'Riga', 'Vilnius', 'Helsinki'], answer: 1 },
+    { questionLv: 'Kurš ir lielākais okeāns?', questionEn: 'Which is the largest ocean?', optionsLv: ['Atlantijas', 'Indijas', 'Arktikas', 'Klusais'], optionsEn: ['Atlantic', 'Indian', 'Arctic', 'Pacific'], answer: 3 },
+    { questionLv: 'Eiropa ir ...?', questionEn: 'Europe is a ...?', optionsLv: ['Valsts', 'Pilsēta', 'Kontinents', 'Sala'], optionsEn: ['Country', 'City', 'Continent', 'Island'], answer: 2 }
   ],
   'word-hero': [
-    { questionLv: 'Kurš ir darbības vārds?', questionEn: 'Which is a verb?', options: ['skaists', 'skriet', 'koks', 'ātri'], answer: 1 },
-    { questionLv: 'Kurā vārdā ir visvairāk burtu?', questionEn: 'Which word has the most letters?', options: ['suns', 'kaķis', 'dators', 'pele'], answer: 2 },
-    { questionLv: 'Pabeidz teikumu: Es ... uz skolu.', questionEn: 'Complete: I ... to school.', options: ['grāmata', 'eju', 'zils', 'logs'], answer: 1 }
+    { questionLv: 'Kurš ir darbības vārds?', questionEn: 'Which is a verb?', optionsLv: ['skaists', 'skriet', 'koks', 'ātri'], optionsEn: ['beautiful', 'to run', 'tree', 'fast'], answer: 1 },
+    { questionLv: 'Kurā vārdā ir visvairāk burtu?', questionEn: 'Which word has the most letters?', optionsLv: ['suns', 'kaķis', 'dators', 'pele'], optionsEn: ['dog', 'cat', 'computer', 'mouse'], answer: 2 },
+    { questionLv: 'Pabeidz teikumu: Es ... uz skolu.', questionEn: 'Complete: I ... to school.', optionsLv: ['grāmata', 'eju', 'zils', 'logs'], optionsEn: ['book', 'go', 'blue', 'window'], answer: 1 }
   ]
 }
 
@@ -217,32 +217,60 @@ const submitTest = (game) => {
           v-for="game in gamesWithTests"
           :key="game.en"
           class="card"
-          :style="{ borderTop: `4px solid ${category.color}` }"
+          :style="{ borderTop: `4px solid ${category.color}`, '--card-color': category.color }"
         >
           <div class="card-content">
             <h3>{{ isLv ? game.lv : game.en }}</h3>
             <p>{{ isLv ? 'Grūtības līmenis' : 'Difficulty level' }}: {{ game.level }}</p>
             <div class="card-buttons" style="margin-top: 1rem;">
-              <button class="card-btn learn-more-btn" type="button" @click="openTest(game.en)">
+              <button
+                class="card-btn learn-more-btn"
+                type="button"
+                :style="{
+                  background: `linear-gradient(135deg, ${category.color}cc 0%, ${category.color} 100%)`,
+                  boxShadow: `0 4px 14px ${category.color}55`
+                }"
+                @click="openTest(game.en)"
+              >
                 {{ isCompleted(game.en) ? (isLv ? 'Pabeigts' : 'Completed') : (isLv ? 'Sākt testu' : 'Start test') }}
               </button>
             </div>
 
-            <div v-if="activeGame === game.en && game.test" style="margin-top: 1rem; background: rgba(255,255,255,0.08); padding: 1rem; border-radius: 10px;">
+            <div v-if="activeGame === game.en && game.test" style="margin-top: 1rem; background: rgba(255,255,255,0.06); padding: 1rem; border-radius: 10px;">
               <p style="font-weight: bold; margin-bottom: 0.8rem;">{{ isLv ? game.test.questionLv : game.test.questionEn }}</p>
               <div class="features-grid" style="margin-top: 0;">
                 <button
-                  v-for="(option, index) in game.test.options"
+                  v-for="(option, index) in (isLv ? game.test.optionsLv : game.test.optionsEn)"
                   :key="option"
                   class="card-btn"
                   type="button"
-                  :style="{ background: selectedAnswer === index ? 'var(--primary-color)' : 'var(--purple-gradient)' }"
+                  :style="{
+                    background: selectedAnswer === index
+                      ? `linear-gradient(135deg, ${category.color}dd, ${category.color})`
+                      : `${category.color}22`,
+                    border: `2px solid ${category.color}${selectedAnswer === index ? 'ff' : '66'}`,
+                    color: 'var(--text-color)',
+                    boxShadow: selectedAnswer === index ? `0 4px 12px ${category.color}55` : 'none'
+                  }"
                   @click="selectedAnswer = index"
                 >
                   {{ option }}
                 </button>
               </div>
-              <button class="create-btn" type="button" style="margin-top: 1rem;" :disabled="selectedAnswer === null" @click="submitTest(game)">
+              <button
+                class="card-btn"
+                type="button"
+                style="margin-top: 1rem; width: auto; padding: 0.6rem 2rem;"
+                :style="{
+                  background: selectedAnswer === null ? 'rgba(255,255,255,0.1)' : `linear-gradient(135deg, ${category.color}cc, ${category.color})`,
+                  border: `2px solid ${selectedAnswer === null ? 'rgba(255,255,255,0.2)' : category.color}`,
+                  color: 'white',
+                  opacity: selectedAnswer === null ? 0.5 : 1,
+                  cursor: selectedAnswer === null ? 'not-allowed' : 'pointer'
+                }"
+                :disabled="selectedAnswer === null"
+                @click="submitTest(game)"
+              >
                 {{ isLv ? 'Pārbaudīt atbildi' : 'Check answer' }}
               </button>
               <p v-if="feedback" style="margin-top: 0.8rem; font-weight: bold;">{{ feedback }}</p>

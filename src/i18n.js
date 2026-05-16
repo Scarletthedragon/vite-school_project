@@ -57,6 +57,15 @@ export const translations = {
     gameZone: '🎮 Spēļu zona',
     yourGames: '🎮 Tavas spēles',
     yourGamesDesc: 'Spēlē spēles un pabeidz misijas, lai nopelnītu vairāk punktu!',
+
+    // Profile Page
+    profileTitle: '👤 Lietotāja profils',
+    profileSubtitle: 'Tava konta informācija',
+    profileInfo: 'Profila informācija',
+    points: 'Punkti',
+    accountType: 'Konta veids',
+    accountActions: 'Konta darbības',
+    logout: '🚪 Iziet',
     
     // Contact Page
     contactTitle: '📧 Kontakti',
@@ -91,7 +100,7 @@ export const translations = {
     whatIs8Plus6: 'Cik ir 8 + 6?',
     oceanCountry: 'Kura ir okeāna valsts?',
     playGame: 'Spēlēt',
-    gameComingSoon: 'Spēle tiek sagatavota! Drīzumā būs pieejama 🎮'
+    gameComingSoon: 'Spēle tiek sagatavota! Drīzumā būs pieejama 🎮',
   },
   en: {
     // Common
@@ -147,6 +156,15 @@ export const translations = {
     gameZone: '🎮 Game Zone',
     yourGames: '🎮 Your Games',
     yourGamesDesc: 'Play games and complete missions to earn more points!',
+
+    // Profile Page
+    profileTitle: '👤 User Profile',
+    profileSubtitle: 'Your account information',
+    profileInfo: 'Profile Information',
+    points: 'Points',
+    accountType: 'Account Type',
+    accountActions: 'Account Actions',
+    logout: '🚪 Logout',
     
     // Contact Page
     contactTitle: '📧 Contact Us',
@@ -181,7 +199,7 @@ export const translations = {
     whatIs8Plus6: 'What is 8 + 6?',
     oceanCountry: 'Which is a country with an ocean?',
     playGame: 'Play',
-    gameComingSoon: 'Game is being prepared! Coming soon 🎮'
+    gameComingSoon: 'Game is being prepared! Coming soon 🎮',
   }
 }
 
