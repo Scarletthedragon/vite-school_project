@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { user } from './auth'
+import { user, users } from './auth'
 import { getStorageKey, readJson, writeJson } from './storage'
 
 const SCORES_KEY = getStorageKey('scores')
@@ -60,6 +60,6 @@ export const getScore = (email) => scores.value[email] || 0
 // Sorted leaderboard (all users with scores)
 export const leaderboard = computed(() => {
   return Object.entries(scores.value)
-    .map(([email, score]) => ({ email, score }))
+    .map(([email, score]) => ({ email, name: users[email]?.name || email, score }))
     .sort((a, b) => b.score - a.score)
 })

@@ -1167,10 +1167,11 @@ main {
 
 /* ===== Footer ===== */
 footer {
-    background: var(--rainbow-gradient);
-    color: white;
-    padding: 2rem 0;
+    background: var(--footer-bg);
+    color: rgba(255,255,255,0.6);
+    padding: 1rem 0;
     margin-top: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 footer .container {
@@ -1178,7 +1179,8 @@ footer .container {
 }
 
 footer p {
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    font-size: 0.85rem;
 }
 
 .social-links {

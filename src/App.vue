@@ -66,7 +66,6 @@ onMounted(() => {
       <span v-else-if="user?.role === 'visitor'" class="user-badge visitor">👁️ VISITOR</span>
     </div>
     <div class="user-buttons">
-      <RouterLink v-if="isLoggedIn && user?.role !== 'visitor'" to="/profile" class="auth-btn">Profile</RouterLink>
       <button v-if="isLoggedIn" @click="handleLogout" class="auth-btn logout">Logout</button>
       <RouterLink v-else to="/login" class="auth-btn login">Login</RouterLink>
     </div>
@@ -76,11 +75,6 @@ onMounted(() => {
   <nav v-if="user?.role === 'admin'" class="admin-nav">
     <RouterLink to="/" class="admin-nav-btn">🏠 Home</RouterLink>
     <RouterLink to="/missions" class="admin-nav-btn">📘 Missions</RouterLink>
-    <RouterLink to="/profile" class="admin-nav-btn">👤 Profile</RouterLink>
-  </nav>
-
-  <!-- User Nav -->
-  <nav v-else-if="user?.role === 'user'" class="admin-nav user-nav">
     <RouterLink to="/profile" class="admin-nav-btn">👤 Profile</RouterLink>
   </nav>
 

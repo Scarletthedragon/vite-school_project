@@ -5,7 +5,7 @@ export const currentLanguage = ref(localStorage.getItem('language') || 'lv')
 export const translations = {
   lv: {
     // Common
-    footer: '© 2025 Rīgas Valsts Tehnikums. Š. Tērmane - Programmēšanas tehniķis',
+    footer: '© 2025 Dragons Den',
     language: 'Valoda',
     
     // Navigation
@@ -38,36 +38,25 @@ export const translations = {
     teachersDesc: 'Dragons Den palīdz mācīties spēlējoties. Katrs uzdevums ir veidots tā, lai bērni praktiski izmēģinātu jaunas prasmes un uzreiz redzētu rezultātu.',
     contactForClassRoom: 'Sazināties par klases kontu',
     
-    // Technical Page
-    missionsTitle: '📘 Mācību misijas',
-    missionsSubtitle: 'Soli pa solim uz prasmju līmeņa celšanu.',
-    chooseMission: '🗺️ Izvēlies misiju',
-    learningPath: '🎯 Mācību ceļš',
-    beginner: '1. Iesācējs',
-    beginnerDesc: 'Vienkārši uzdevumi ar tūlītēju atgriezenisko saiti.',
-    skilled: '2. Prasmīgais',
-    skilledDesc: 'Apvieno vairākas prasmes vienā misijā.',
-    master: '3. Meistars',
-    masterDesc: 'Izpildi izaicinājumus ar laika limitu un bonusiem.',
-    gameTips: '💡 Padomi spēlei',
-    startMission: 'Sākt misiju',
-    codeStart: 'Koda starts',
-    codeStartSummary: 'Iemācies komandu secību un izpildi vienkāršu algoritmu.',
-    codeSteps1: 'Ievieto 3 soļus pareizā secībā',
-    codeSteps2: 'Nopelni 10 punktus',
-    codeSteps3: 'Atbloķē nākamo misiju',
-    mathRace: 'Matemātikas trase',
-    mathRaceSummary: 'Atrisini uzdevumus, lai saglabātu ātrumu.',
-    mathSteps1: 'Pareizi atbildi uz 5 uzdevumiem',
-    mathSteps2: 'Izvēlies īsāko ceļu',
-    mathSteps3: 'Sasniedz finišu',
-    languageMagic: 'Valodas burvestība',
-    languageMagicSummary: 'Veido vārdus no burtiem un uzkrāj mana kristālus.',
-    langSteps1: 'Izveido 3 vārdus',
-    langSteps2: 'Izmanto bonus burtu',
-    langSteps3: 'Nopelni nozīmīti',
-    easy: 'Viegli',
-    medium: 'Vidēji',
+    // Leaderboard
+    leaderboardTitle: '🏆 Rezultātu tabula',
+    yourPoints: 'Tavi punkti:',
+    playerColumn: 'Lietotājs',
+    pointsColumn: 'Punkti',
+    noPointsYet: 'Nav punktu vēl.',
+
+    // Message Board
+    messageBoardTitle: '📌 Ziņojumu dēlis',
+    messageBoardDesc: 'Atver sānjoslu, lai atstātu ziņu mums un citiem lietotājiem.',
+    openMessageBoard: 'Atvērt ziņojumu dēli',
+    messageBoardSidebar: 'Ziņojumu dēlis',
+    post: 'Publicēt',
+    noMessages: 'Pagaidām ziņu nav.',
+    missions: 'Misijas',
+    openList: 'Atvērt sarakstu',
+    gameZone: '🎮 Spēļu zona',
+    yourGames: '🎮 Tavas spēles',
+    yourGamesDesc: 'Spēlē spēles un pabeidz misijas, lai nopelnītu vairāk punktu!',
     
     // Contact Page
     contactTitle: '📧 Kontakti',
@@ -106,7 +95,7 @@ export const translations = {
   },
   en: {
     // Common
-    footer: '© 2025 Riga State Technical School. Š. Tērmane - Programming Technician',
+    footer: '© 2025 Dragons Den',
     language: 'Language',
     
     // Navigation
@@ -139,36 +128,25 @@ export const translations = {
     teachersDesc: 'Dragons Den helps learning through play. Each task is designed so children can practically try new skills and see results immediately.',
     contactForClassRoom: 'Contact About Class Accounts',
     
-    // Technical Page
-    missionsTitle: '📘 Learning Missions',
-    missionsSubtitle: 'Step by step towards improving skills.',
-    chooseMission: '🗺️ Choose a Mission',
-    learningPath: '🎯 Learning Path',
-    beginner: '1. Beginner',
-    beginnerDesc: 'Simple tasks with immediate feedback.',
-    skilled: '2. Skilled',
-    skilledDesc: 'Combine multiple skills in one mission.',
-    master: '3. Master',
-    masterDesc: 'Complete challenges with time limits and bonuses.',
-    gameTips: '💡 Game Tips',
-    startMission: 'Start Mission',
-    codeStart: 'Code Start',
-    codeStartSummary: 'Learn command sequences and execute simple algorithms.',
-    codeSteps1: 'Arrange 3 steps in the correct order',
-    codeSteps2: 'Earn 10 points',
-    codeSteps3: 'Unlock the next mission',
-    mathRace: 'Math Race',
-    mathRaceSummary: 'Solve tasks to maintain speed.',
-    mathSteps1: 'Answer 5 questions correctly',
-    mathSteps2: 'Choose the shortest path',
-    mathSteps3: 'Reach the finish line',
-    languageMagic: 'Language Magic',
-    languageMagicSummary: 'Make words from letters and collect mana crystals.',
-    langSteps1: 'Create 3 words',
-    langSteps2: 'Use the bonus letter',
-    langSteps3: 'Earn a badge',
-    easy: 'Easy',
-    medium: 'Medium',
+    // Leaderboard
+    leaderboardTitle: '🏆 Leaderboard',
+    yourPoints: 'Your points:',
+    playerColumn: 'Player',
+    pointsColumn: 'Points',
+    noPointsYet: 'No points yet.',
+
+    // Message Board
+    messageBoardTitle: '📌 Message Board',
+    messageBoardDesc: 'Open the sidebar to leave a message for us and other users.',
+    openMessageBoard: 'Open message board',
+    messageBoardSidebar: 'Message Board',
+    post: 'Post',
+    noMessages: 'No messages yet.',
+    missions: 'Missions',
+    openList: 'Open list',
+    gameZone: '🎮 Game Zone',
+    yourGames: '🎮 Your Games',
+    yourGamesDesc: 'Play games and complete missions to earn more points!',
     
     // Contact Page
     contactTitle: '📧 Contact Us',

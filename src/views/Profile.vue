@@ -97,8 +97,8 @@ const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: 
         </div>
 
         <div v-if="user?.role === 'user'" style="margin-top: 2rem; padding: 1rem; background: rgba(52,152,219,0.15); border-radius: 8px; border-left: 4px solid #2196f3; color: var(--text-color);">
-          <h4>🎮 Your Games</h4>
-          <p>Spēlē spēles un pabeidz misijas, lai nopelnītu vairāk punktu!</p>
+          <h4>{{ t('yourGames') }}</h4>
+          <p>{{ t('yourGamesDesc') }}</p>
         </div>
       </div>
     </section>

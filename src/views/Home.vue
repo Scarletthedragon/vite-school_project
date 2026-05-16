@@ -163,7 +163,7 @@ const openGameCategory = (slug) => {
 
     <!-- Games Section -->
     <section id="games" class="content-section">
-      <h2>🎮 Spēļu zona</h2>
+      <h2>{{ t('gameZone') }}</h2>
 
       <div class="platform-cards">
         <div
@@ -180,7 +180,7 @@ const openGameCategory = (slug) => {
             <p>{{ game.description }}</p>
             <div class="card-buttons">
               <button class="card-btn learn-more-btn" type="button" @click="openGameCategory(game.slug)">
-                {{ currentLanguage === 'lv' ? 'Atvērt sarakstu' : 'Open list' }}
+                {{ t('openList') }}
               </button>
             </div>
           </div>
@@ -192,17 +192,17 @@ const openGameCategory = (slug) => {
 
     <!-- Leaderboard Section -->
     <section v-if="user" class="content-section">
-      <h2>🏆 Rezultātu tabula</h2>
+      <h2>{{ t('leaderboardTitle') }}</h2>
       <div class="concept-box">
         <div v-if="user.role !== 'visitor'" style="margin-bottom: 1rem; font-size: 1.1rem;">
-          Tavi punkti: <strong style="color: var(--primary-color); font-size: 1.4rem;">{{ userScore ?? 0 }} ⭐</strong>
+          {{ t('yourPoints') }} <strong style="color: var(--primary-color); font-size: 1.4rem;">{{ userScore ?? 0 }} ⭐</strong>
         </div>
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="border-bottom: 2px solid var(--primary-color);">
               <th style="text-align: left; padding: 0.5rem;">#</th>
-              <th style="text-align: left; padding: 0.5rem;">Lietotājs</th>
-              <th style="text-align: right; padding: 0.5rem;">Punkti ⭐</th>
+              <th style="text-align: left; padding: 0.5rem;">{{ t('playerColumn') }}</th>
+              <th style="text-align: right; padding: 0.5rem;">{{ t('pointsColumn') }} ⭐</th>
             </tr>
           </thead>
           <tbody>
@@ -212,11 +212,11 @@ const openGameCategory = (slug) => {
               :style="{ background: entry.email === user?.email ? 'rgba(155,89,182,0.15)' : 'transparent', borderBottom: '1px solid rgba(155,89,182,0.2)' }"
             >
               <td style="padding: 0.6rem 0.5rem; font-weight: bold;">{{ index + 1 }}</td>
-              <td style="padding: 0.6rem 0.5rem;">{{ entry.email }}</td>
+              <td style="padding: 0.6rem 0.5rem;">{{ entry.name }}</td>
               <td style="padding: 0.6rem 0.5rem; text-align: right; font-weight: bold;">{{ entry.score }}</td>
             </tr>
             <tr v-if="leaderboard.length === 0">
-              <td colspan="3" style="padding: 1rem; text-align: center; opacity: 0.6;">Nav punktu vēl.</td>
+              <td colspan="3" style="padding: 1rem; text-align: center; opacity: 0.6;">{{ t('noPointsYet') }}</td>
             </tr>
           </tbody>
         </table>
@@ -224,23 +224,17 @@ const openGameCategory = (slug) => {
     </section>
 
     <section class="content-section" style="text-align: center;">
-      <h2>{{ currentLanguage === 'lv' ? '📌 Ziņojumu dēlis' : '📌 Message Board' }}</h2>
-      <p>{{ currentLanguage === 'lv' ? 'Atver sānjoslu, lai atstātu ziņu mums un citiem lietotājiem.' : 'Open the sidebar to leave a message for us and other users.' }}</p>
+      <h2>{{ t('messageBoardTitle') }}</h2>
+      <p>{{ t('messageBoardDesc') }}</p>
       <button class="create-btn" type="button" @click="messageBoardOpen = true">
-        {{ currentLanguage === 'lv' ? 'Atvērt ziņojumu dēli' : 'Open message board' }}
+        {{ t('openMessageBoard') }}
       </button>
-    </section>
-
-    <section class="content-section" style="text-align: center; margin-top: 1rem;">
-      <RouterLink to="/missions" class="create-btn" style="text-decoration: none; display: inline-block;">
-        {{ currentLanguage === 'lv' ? 'Misijas' : 'Missions' }}
-      </RouterLink>
     </section>
 
     <div v-if="messageBoardOpen" class="message-board-backdrop" @click="messageBoardOpen = false"></div>
     <aside class="message-board-sidebar" :class="{ open: messageBoardOpen }">
       <div class="message-board-header">
-        <h3>{{ currentLanguage === 'lv' ? 'Ziņojumu dēlis' : 'Message Board' }}</h3>
+        <h3>{{ t('messageBoardSidebar') }}</h3>
         <button class="message-board-close" type="button" @click="messageBoardOpen = false">✕</button>
       </div>
 
@@ -250,13 +244,13 @@ const openGameCategory = (slug) => {
           <textarea id="board-message" rows="4" v-model="boardForm.message"></textarea>
           <span class="error-message">{{ boardErrors.message }}</span>
         </div>
-        <button type="submit" class="submit-btn">{{ currentLanguage === 'lv' ? 'Publicēt' : 'Post' }}</button>
+        <button type="submit" class="submit-btn">{{ t('post') }}</button>
         <div class="success-message" :class="{ show: boardStatus }">{{ boardStatus }}</div>
       </form>
 
       <div class="message-board-list">
         <p v-if="formattedBoardMessages.length === 0" style="opacity: 0.7;">
-          {{ currentLanguage === 'lv' ? 'Pagaidām ziņu nav.' : 'No messages yet.' }}
+          {{ t('noMessages') }}
         </p>
         <article v-for="entry in formattedBoardMessages" :key="entry.id" class="message-board-item">
           <div class="message-board-meta">
