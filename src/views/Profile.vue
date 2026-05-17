@@ -25,7 +25,7 @@ const handleAward = () => {
 }
 
 // Known registered users (for admin dropdown)
-const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: data.name }))
+const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: data.name, role: data.role }))
 </script>
 
 <template>
@@ -93,6 +93,31 @@ const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: 
             </div>
             <button class="create-btn" @click="handleAward" style="margin-top: 0.5rem;">➕ Piešķirt punktus</button>
             <p v-if="awardMessage" style="color: #27ae60; font-weight: bold;">{{ awardMessage }}</p>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <h4 style="margin-bottom: 1rem;">👥 Reģistrētie lietotāji ({{ knownUsers.length }})</h4>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+              <thead>
+                <tr style="background: rgba(243,156,18,0.25);">
+                  <th style="text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid #f39c12;">Vārds</th>
+                  <th style="text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid #f39c12;">E-pasts</th>
+                  <th style="text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid #f39c12;">Loma</th>
+                  <th style="text-align: right; padding: 0.6rem 0.8rem; border-bottom: 2px solid #f39c12;">Punkti</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="u in knownUsers" :key="u.email" style="border-bottom: 1px solid rgba(243,156,18,0.15);">
+                  <td style="padding: 0.6rem 0.8rem;">{{ u.name }}</td>
+                  <td style="padding: 0.6rem 0.8rem;">{{ u.email }}</td>
+                  <td style="padding: 0.6rem 0.8rem;">
+                    <span v-if="u.role === 'admin'" style="background: #e74c3c; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👑 Admin</span>
+                    <span v-else style="background: #3498db; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👤 User</span>
+                  </td>
+                  <td style="padding: 0.6rem 0.8rem; text-align: right; font-weight: bold;">{{ getScore(u.email) }} ⭐</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
