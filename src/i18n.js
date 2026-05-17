@@ -66,6 +66,23 @@ export const translations = {
     accountType: 'Konta veids',
     accountActions: 'Konta darbības',
     logout: '🚪 Iziet',
+
+    // Admin Panel
+    adminPanel: '⚙️ Admin Panel',
+    adminSearchPlaceholder: '🔍 Meklēt pēc vārda vai e-pasta...',
+    adminRoleLabel: 'Loma:',
+    adminRoleAll: 'Visi',
+    adminColName: 'Vārds',
+    adminColEmail: 'E-pasts',
+    adminColRole: 'Loma',
+    adminColPoints: 'Punkti',
+    adminColAward: 'Piešķirt',
+    adminNoUsers: 'Nav atrasts neviens lietotājs',
+    adminUserCount: 'lietotāji',
+    adminSortNameAsc: 'Vārds A→Z',
+    adminSortNameDesc: 'Vārds Z→A',
+    adminSortPointsDesc: 'Punkti ↓',
+    adminSortPointsAsc: 'Punkti ↑',
     
     // Contact Page
     contactTitle: '📧 Kontakti',
@@ -165,6 +182,23 @@ export const translations = {
     accountType: 'Account Type',
     accountActions: 'Account Actions',
     logout: '🚪 Logout',
+
+    // Admin Panel
+    adminPanel: '⚙️ Admin Panel',
+    adminSearchPlaceholder: '🔍 Search by name or email...',
+    adminRoleLabel: 'Role:',
+    adminRoleAll: 'All',
+    adminColName: 'Name',
+    adminColEmail: 'Email',
+    adminColRole: 'Role',
+    adminColPoints: 'Points',
+    adminColAward: 'Award',
+    adminNoUsers: 'No users found',
+    adminUserCount: 'users',
+    adminSortNameAsc: 'Name A→Z',
+    adminSortNameDesc: 'Name Z→A',
+    adminSortPointsDesc: 'Points ↓',
+    adminSortPointsAsc: 'Points ↑',
     
     // Contact Page
     contactTitle: '📧 Contact Us',
