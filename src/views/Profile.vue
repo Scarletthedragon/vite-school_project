@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { user, logout, users } from '../auth'
+import { ref, computed, onMounted } from 'vue'
+import { user, logout } from '../auth'
 import { useRouter } from 'vue-router'
 import { t } from '../i18n'
-import { userScore, awardScore, getScore } from '../scores'
+import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard } from '../scores'
 
 const router = useRouter()
 
@@ -19,20 +19,20 @@ const roleFilter = ref('all')
 const sortBy = ref('name-asc')
 const rowPoints = ref({})
 
-const handleRowAward = (email, name) => {
+const handleRowAward = async (email, name) => {
   const pts = Number(rowPoints.value[email] ?? 10)
   if (!pts || pts <= 0) return
-  awardScore(email, pts)
+  await awardScore(email, pts)
   awardMessage.value = `✅ +${pts} punkti piešķirti ${name}`
   setTimeout(() => { awardMessage.value = '' }, 3000)
 }
 
-// Known registered users
-const knownUsers = Object.entries(users).map(([email, data]) => ({ email, name: data.name, role: data.role }))
+// Users loaded from leaderboard API
+const knownUsers = computed(() => leaderboard.value.map(e => ({ email: e.email, name: e.name, role: e.role ?? 'user' })))
 
 const filteredUsers = computed(() => {
   const q = userFilter.value.toLowerCase().trim()
-  let result = knownUsers.filter(u => {
+  let result = knownUsers.value.filter(u => {
     const matchesSearch = !q ||
       u.name.toLowerCase().includes(q) ||
       u.email.toLowerCase().includes(q)
@@ -45,6 +45,8 @@ const filteredUsers = computed(() => {
   else if (sortBy.value === 'points-asc') result = [...result].sort((a, b) => getScore(a.email) - getScore(b.email))
   return result
 })
+
+onMounted(() => fetchLeaderboard())
 </script>
 
 <template>

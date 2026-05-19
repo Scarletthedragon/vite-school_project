@@ -1,12 +1,14 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { t, currentLanguage } from '../i18n'
 import { user } from '../auth'
-import { userScore, leaderboard } from '../scores'
+import { userScore, leaderboard, fetchLeaderboard } from '../scores'
 import { boardMessages, postBoardMessage } from '../messageBoard'
 
 const router = useRouter()
+
+onMounted(() => fetchLeaderboard())
 
 const messageBoardOpen = ref(false)
 const boardForm = ref({
