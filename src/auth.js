@@ -1,28 +1,29 @@
 import { ref, computed } from 'vue'
 
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+
 export const user = ref(null)
 export const userRole = ref(localStorage.getItem('userRole') || 'visitor')
 
-export const users = {
-  'admin@dragons.com': { password: 'admin123', role: 'admin', name: 'Admin User' },
-  'user@dragons.com': { password: 'user123', role: 'user', name: 'Regular User' }
-}
-
 export const isLoggedIn = computed(() => user.value !== null)
 
-export const login = (email, password) => {
-  if (users[email] && users[email].password === password) {
-    user.value = {
-      email,
-      name: users[email].name,
-      role: users[email].role
-    }
-    userRole.value = users[email].role
-    localStorage.setItem('userRole', users[email].role)
-    localStorage.setItem('user', JSON.stringify(user.value))
+export const login = async (email, password) => {
+  try {
+    const res = await fetch(`${API}/api/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const data = await res.json()
+    if (!res.ok) return { success: false, message: data.message ?? 'Invalid email or password' }
+    user.value = data.user
+    userRole.value = data.user.role
+    localStorage.setItem('userRole', data.user.role)
+    localStorage.setItem('user', JSON.stringify(data.user))
     return { success: true, message: 'Login successful!' }
+  } catch {
+    return { success: false, message: 'Could not connect to server' }
   }
-  return { success: false, message: 'Invalid email or password' }
 }
 
 export const logout = () => {
@@ -32,13 +33,22 @@ export const logout = () => {
   localStorage.removeItem('user')
 }
 
-export const register = (email, password, name) => {
-  if (users[email]) {
-    return { success: false, message: 'Email already exists' }
+export const register = async (email, password, name) => {
+  try {
+    const res = await fetch(`${API}/api/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email, password, name }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      const msg = data.errors ? Object.values(data.errors).flat()[0] : (data.message ?? 'Registration failed')
+      return { success: false, message: msg }
+    }
+    return { success: true, message: 'Registration successful! You can now login.' }
+  } catch {
+    return { success: false, message: 'Could not connect to server' }
   }
-  
-  users[email] = { password, role: 'user', name }
-  return { success: true, message: 'Registration successful! You can now login.' }
 }
 
 export const continueAsVisitor = () => {

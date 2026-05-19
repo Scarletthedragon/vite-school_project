@@ -28,7 +28,7 @@ const handleVisitor = () => {
   router.push('/')
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   error.value = ''
   success.value = ''
 
@@ -38,7 +38,7 @@ const handleSubmit = () => {
   }
 
   if (isLogin.value) {
-    const result = authLogin(email.value, password.value)
+    const result = await authLogin(email.value, password.value)
     if (result.success) {
       success.value = result.message
       setTimeout(() => {
@@ -56,7 +56,7 @@ const handleSubmit = () => {
       error.value = 'Please enter your name'
       return
     }
-    const result = authRegister(email.value, password.value, name.value)
+    const result = await authRegister(email.value, password.value, name.value)
     if (result.success) {
       success.value = result.message
       setTimeout(() => {
