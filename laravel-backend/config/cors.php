@@ -18,15 +18,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(array_merge(
-        [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'https://dragonden.space',
-            'https://dragonden.vercel.app',
-        ],
-        explode(',', env('CORS_ALLOWED_ORIGINS', ''))
-    )),
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', '*')),
 
     'allowed_origins_patterns' => [],
 
