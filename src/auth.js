@@ -9,20 +9,33 @@ export const isLoggedIn = computed(() => user.value !== null)
 
 export const login = async (email, password) => {
   try {
+    console.log('[LOGIN] Attempting login with:', { email, password, API });
     const res = await fetch(`${API}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ email, password }),
-    })
-    const data = await res.json()
-    if (!res.ok) return { success: false, message: data.message ?? 'Invalid email or password' }
-    user.value = data.user
-    userRole.value = data.user.role
-    localStorage.setItem('userRole', data.user.role)
-    localStorage.setItem('user', JSON.stringify(data.user))
-    return { success: true, message: 'Login successful!' }
-  } catch {
-    return { success: false, message: 'Could not connect to server' }
+    });
+    console.log('[LOGIN] Response status:', res.status);
+    let data = null;
+    try {
+      data = await res.json();
+      console.log('[LOGIN] Response JSON:', data);
+    } catch (jsonErr) {
+      console.error('[LOGIN] Error parsing JSON:', jsonErr);
+    }
+    if (!res.ok) {
+      console.error('[LOGIN] Login failed:', data);
+      return { success: false, message: (data && data.message) ? data.message : 'Invalid email or password' };
+    }
+    user.value = data.user;
+    userRole.value = data.user.role;
+    localStorage.setItem('userRole', data.user.role);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    console.log('[LOGIN] Login successful:', data.user);
+    return { success: true, message: 'Login successful!' };
+  } catch (err) {
+    console.error('[LOGIN] Network or server error:', err);
+    return { success: false, message: 'Could not connect to server' };
   }
 }
 
