@@ -32,6 +32,12 @@
         }
     },
     "scripts": {
+        "pre-migrate": [
+            "@php -r \"if (!is_dir('/app/database')) mkdir('/app/database', 0777, true); if (!file_exists('/app/database/database.sqlite')) file_put_contents('/app/database/database.sqlite', '');\""
+        ],
+        "migrate": [
+            "@php artisan migrate --force"
+        ],
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
