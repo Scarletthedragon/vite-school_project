@@ -198,4 +198,4 @@ onMounted(() => fetchLeaderboard())
 
 <button @click="makeAdmin" style="margin-top: 1rem; padding: 0.7rem 1.5rem; background: #e67e22; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
   Become Admin
-</button>
+ 
