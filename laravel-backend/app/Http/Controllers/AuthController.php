@@ -7,6 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
+    public function makeAdmin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->is_admin = true;
+        $user->role = 'admin';
+        $user->save();
+
+        return response()->json(['success' => true, 'message' => 'User promoted to admin.']);
+    }
 {
     public function register(Request $request)
     {
