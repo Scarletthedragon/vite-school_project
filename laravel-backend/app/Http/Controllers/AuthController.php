@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
+{
     public function makeAdmin(Request $request)
     {
         $request->validate([
@@ -20,7 +21,6 @@ class AuthController extends Controller
 
         return response()->json(['success' => true, 'message' => 'User promoted to admin.']);
     }
-{
     public function register(Request $request)
     {
         $request->validate([
