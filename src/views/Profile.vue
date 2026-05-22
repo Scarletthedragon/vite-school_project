@@ -187,12 +187,7 @@ onMounted(() => fetchLeaderboard())
         <div v-if="user?.role === 'user'" style="margin-top: 2rem; padding: 1rem; background: rgba(52,152,219,0.15); border-radius: 8px; border-left: 4px solid #2196f3; color: var(--text-color);">
           <h4>{{ t('yourGames') }}</h4>
           <p>{{ t('yourGamesDesc') }}</p>
-          <button v-if="!user?.is_admin" @click="makeAdmin" style="margin-top: 1rem; padding: 0.7rem 1.5rem; background: #e67e22; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Become Admin
-          </button>
-          <button @click="makeAdmin" style="margin-top: 1rem; padding: 0.7rem 1.5rem; background: #e67e22; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            Become Admin
-          </button>
+
         </div>
       </div>
     </section>
