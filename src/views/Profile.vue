@@ -84,16 +84,16 @@ onMounted(() => fetchLeaderboard())
             <p style="font-size: 1.1rem; margin-top: 0.5rem;">{{ user?.email }}</p>
           </div>
           <div style="margin-bottom: 1.5rem;">
-            <label style="font-weight: bold; color: var(--primary-color);">{{ t('accountType') }}:</label>
-            <p style="font-size: 1.1rem; margin-top: 0.5rem;">
-              <span v-if="user?.role === 'admin'" style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
-                👑 {{ user?.role.toUpperCase() }}
-              </span>
-              <span v-else-if="user?.role === 'user'" style="background: #3498db; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
-                👤 {{ user?.role.toUpperCase() }}
-              </span>
-            </p>
-          </div>
+              <label style="font-weight: bold; color: var(--primary-color);">{{ t('accountType') }}:</label>
+              <p style="font-size: 1.1rem; margin-top: 0.5rem;">
+                <span v-if="user?.is_admin" style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
+                  👑 ADMIN
+                </span>
+                <span v-else-if="user?.role === 'user'" style="background: #3498db; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
+                  👤 USER
+                </span>
+              </p>
+            </div>
         </div>
 
         <div style="margin-top: 2rem;">
@@ -187,6 +187,9 @@ onMounted(() => fetchLeaderboard())
         <div v-if="user?.role === 'user'" style="margin-top: 2rem; padding: 1rem; background: rgba(52,152,219,0.15); border-radius: 8px; border-left: 4px solid #2196f3; color: var(--text-color);">
           <h4>{{ t('yourGames') }}</h4>
           <p>{{ t('yourGamesDesc') }}</p>
+          <button v-if="!user?.is_admin" @click="makeAdmin" style="margin-top: 1rem; padding: 0.7rem 1.5rem; background: #e67e22; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+            Become Admin
+          </button>
           <button @click="makeAdmin" style="margin-top: 1rem; padding: 0.7rem 1.5rem; background: #e67e22; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
             Become Admin
           </button>

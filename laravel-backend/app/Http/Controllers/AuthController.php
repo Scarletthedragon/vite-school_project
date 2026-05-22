@@ -56,7 +56,12 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'user'    => ['name' => $user->name, 'email' => $user->email, 'role' => $user->role ?? 'user'],
+            'user'    => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role ?? 'user',
+                'is_admin' => $user->is_admin ?? false,
+            ],
         ]);
     }
 }
