@@ -18,10 +18,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'https://dragonden.vercel.app',
-        'https://dragonden-ngz3cm62v-sharlotetermane-6875s-projects.vercel.app',
-    ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
