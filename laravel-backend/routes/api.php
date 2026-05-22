@@ -1,3 +1,14 @@
+// TEMPORARY: Promote a user to admin (remove after use for security)
+Route::post('/promote-admin', function (\Illuminate\Http\Request $request) {
+    $user = \App\Models\User::where('email', $request->email)->first();
+    if ($user) {
+        $user->role = 'admin';
+        $user->is_admin = true;
+        $user->save();
+        return ['success' => true];
+    }
+    return ['success' => false, 'message' => 'User not found'];
+});
 <?php
 
 use Illuminate\Support\Facades\Route;
