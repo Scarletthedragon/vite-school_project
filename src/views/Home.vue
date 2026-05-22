@@ -251,6 +251,13 @@ const openGameCategory = (slug) => {
       </section>
     </div>
 
+    <!-- Login Button -->
+    <section style="text-align:center; margin: 2rem 0;">
+      <router-link to="/login">
+        <button style="padding: 0.8em 2em; font-size: 1.2em; background: linear-gradient(90deg, #ff8a00, #e52e71); color: white; border: none; border-radius: 8px; cursor: pointer;">Login</button>
+      </router-link>
+    </section>
+
     <div v-if="messageBoardOpen" class="message-board-backdrop" @click="messageBoardOpen = false"></div>
     <aside class="message-board-sidebar" :class="{ open: messageBoardOpen }">
       <div class="message-board-header">
