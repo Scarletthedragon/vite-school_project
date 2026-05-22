@@ -18,7 +18,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', '*')),
+    'allowed_origins' => [
+        'https://dragonden.vercel.app',
+        'https://dragonden-ngz3cm62v-sharlotetermane-6875s-projects.vercel.app',
+    ],
 
     'allowed_origins_patterns' => [],
 
