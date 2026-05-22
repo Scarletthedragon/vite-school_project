@@ -18,7 +18,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://dragonden.space',
+        // You can also use '*' for all, but it's less secure
+    ],
 
     'allowed_origins_patterns' => [],
 
