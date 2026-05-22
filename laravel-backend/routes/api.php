@@ -18,26 +18,4 @@ Route::post('/make-admin', [AuthController::class, 'makeAdmin']);
 Route::get('/leaderboard', [ScoreController::class, 'leaderboard']);
 Route::post('/scores/add', [ScoreController::class, 'addPoints']);
 
-// TEMPORARY: Promote a user to admin (remove after use for security)
-Route::post('/promote-admin', function (\Illuminate\Http\Request $request) {
-    $user = \App\Models\User::where('email', $request->email)->first();
-    if ($user) {
-        $user->role = 'admin';
-        $user->is_admin = true;
-        $user->save();
-        return ['success' => true];
-    }
-    return ['success' => false, 'message' => 'User not found'];
-});
 
-<?php
-Route::post('/promote-admin', function (\Illuminate\Http\Request $request) {
-    $user = \App\Models\User::where('email', $request->email)->first();
-    if ($user) {
-        $user->role = 'admin';
-        $user->is_admin = true;
-        $user->save();
-        return ['success' => true];
-    }
-    return ['success' => false, 'message' => 'User not found'];
-});
