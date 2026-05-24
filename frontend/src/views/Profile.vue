@@ -6,6 +6,7 @@ import { t } from '../i18n'
 import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard } from '../scores'
 
 const router = useRouter()
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
 
 const handleLogout = () => {
   logout()
@@ -14,6 +15,8 @@ const handleLogout = () => {
 
 // Admin: award points
 const awardMessage = ref('')
+const adminMessage = ref('')
+const adminError = ref('')
 const userFilter = ref('')
 const roleFilter = ref('all')
 const sortBy = ref('name-asc')
@@ -25,6 +28,41 @@ const handleRowAward = async (email, name) => {
   await awardScore(email, pts)
   awardMessage.value = `✅ +${pts} punkti piešķirti ${name}`
   setTimeout(() => { awardMessage.value = '' }, 3000)
+}
+
+const handleMakeAdmin = async (email, name) => {
+  if (!email) return
+
+  adminMessage.value = ''
+  adminError.value = ''
+
+  try {
+    const res = await fetch(`${API}/api/make-admin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      adminError.value = data?.message ?? 'Failed to promote user'
+      return
+    }
+
+    adminMessage.value = `✅ ${name} is now an admin`
+    await fetchLeaderboard()
+
+    // If current user promoted themselves, reflect it immediately in UI/session.
+    if (user.value?.email === email) {
+      user.value = { ...user.value, role: 'admin', is_admin: true }
+      localStorage.setItem('user', JSON.stringify(user.value))
+      localStorage.setItem('userRole', 'admin')
+    }
+
+    setTimeout(() => { adminMessage.value = '' }, 3000)
+  } catch {
+    adminError.value = 'Could not connect to server'
+  }
 }
 
 // Users loaded from leaderboard API
@@ -45,15 +83,6 @@ const filteredUsers = computed(() => {
   else if (sortBy.value === 'points-asc') result = [...result].sort((a, b) => getScore(a.email) - getScore(b.email))
   return result
 })
-
-const makeAdmin = async () => {
-  await fetch('https://vite-schoolproject-production.up.railway.app/api/make-admin', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: user.email }),
-  });
-  alert('You are now an admin! Please log out and log in again to see changes.');
-}
 
 onMounted(() => fetchLeaderboard())
 </script>
@@ -138,6 +167,8 @@ onMounted(() => fetchLeaderboard())
           </div>
 
           <p v-if="awardMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ awardMessage }}</p>
+          <p v-if="adminMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ adminMessage }}</p>
+          <p v-if="adminError" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ adminError }}</p>
 
           <div>
             <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed;">
@@ -175,6 +206,12 @@ onMounted(() => fetchLeaderboard())
                         @click="handleRowAward(u.email, u.name)"
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                       >➕</button>
+                      <button
+                        v-if="u.role !== 'admin'"
+                        @click="handleMakeAdmin(u.email, u.name)"
+                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
+                        title="Promote to admin"
+                      >👑</button>
                     </div>
                   </td>
                 </tr>
