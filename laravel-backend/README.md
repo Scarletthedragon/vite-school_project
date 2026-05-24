@@ -7,6 +7,33 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Railway Deployment
+
+This project includes Railway-ready startup files:
+
+- `railway.json` for deployment settings and health check path (`/up`)
+- `railway-start.sh` for startup: optional SQLite file creation, migrations, and server boot
+- `Procfile` that calls `bash ./railway-start.sh`
+
+Set these Railway variables before deploying:
+
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_KEY` (generate with `php artisan key:generate --show` locally)
+- `APP_URL` (your Railway public URL)
+- `CORS_ALLOWED_ORIGINS` (your frontend URL, for example Vercel)
+
+For PostgreSQL/MySQL on Railway, also set:
+
+- `DB_CONNECTION` (`pgsql` or `mysql`)
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+If you do not attach a DB service, keep `DB_CONNECTION=sqlite`.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

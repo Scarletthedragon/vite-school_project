@@ -1,1 +1,1 @@
-web: php -r "if (!is_dir('/app/database')) mkdir('/app/database', 0777, true); if (!file_exists('/app/database/database.sqlite')) file_put_contents('/app/database/database.sqlite', '');" && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+web: bash ./railway-start.sh
