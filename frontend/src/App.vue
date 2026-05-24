@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import { currentLanguage, setLanguage, t } from './i18n'
 import { user, logout, isLoggedIn } from './auth'
@@ -7,6 +7,7 @@ import { user, logout, isLoggedIn } from './auth'
 const router = useRouter()
 const isDarkMode = ref(false)
 const isMenuOpen = ref(false)
+const isAdmin = computed(() => user.value?.role === 'admin' || user.value?.is_admin)
 
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
@@ -61,7 +62,7 @@ onMounted(() => {
   <div class="user-menu">
     <div v-if="isLoggedIn" class="user-info">
       <span class="user-name">👤 {{ user?.name }}</span>
-      <span v-if="user?.role === 'admin'" class="user-badge admin">👑 ADMIN</span>
+      <span v-if="isAdmin" class="user-badge admin">👑 ADMIN</span>
       <span v-else-if="user?.role === 'user'" class="user-badge user">USER</span>
       <span v-else-if="user?.role === 'visitor'" class="user-badge visitor">👁️ VISITOR</span>
     </div>
@@ -72,7 +73,7 @@ onMounted(() => {
   </div>
 
   <!-- Admin Nav -->
-  <nav v-if="user?.role === 'admin'" class="admin-nav">
+  <nav v-if="isAdmin" class="admin-nav">
     <RouterLink to="/" class="admin-nav-btn">🏠 Home</RouterLink>
     <RouterLink to="/missions" class="admin-nav-btn">📘 Missions</RouterLink>
     <RouterLink to="/profile" class="admin-nav-btn">👤 Profile</RouterLink>

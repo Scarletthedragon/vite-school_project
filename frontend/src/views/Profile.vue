@@ -84,6 +84,8 @@ const filteredUsers = computed(() => {
   return result
 })
 
+const isAdmin = computed(() => user.value?.role === 'admin' || user.value?.is_admin)
+
 onMounted(() => fetchLeaderboard())
 </script>
 
@@ -136,7 +138,7 @@ onMounted(() => fetchLeaderboard())
           </button>
         </div>
 
-        <div v-if="user?.role === 'admin'" style="margin-top: 2rem; padding: 1rem; background: rgba(243,156,18,0.15); border-radius: 8px; border-left: 4px solid #f39c12; color: var(--text-color);">
+        <div v-if="isAdmin" style="margin-top: 2rem; padding: 1rem; background: rgba(243,156,18,0.15); border-radius: 8px; border-left: 4px solid #f39c12; color: var(--text-color);">
           <h4>{{ t('adminPanel') }}</h4>
 
           <div style="margin-top: 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">

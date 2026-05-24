@@ -54,13 +54,16 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid email or password'], 401);
         }
 
+        $isAdmin = (bool) ($user->is_admin ?? false);
+        $role = $isAdmin ? 'admin' : ($user->role ?? 'user');
+
         return response()->json([
             'success' => true,
             'user'    => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
-                'is_admin' => $user->is_admin ?? false,
+                'role' => $role,
+                'is_admin' => $isAdmin,
             ],
         ]);
     }
