@@ -4,11 +4,14 @@ import { useRouter } from 'vue-router'
 import { t, currentLanguage } from '../i18n'
 import { user } from '../auth'
 import { userScore, leaderboard, fetchLeaderboard } from '../scores'
-import { boardMessages, postBoardMessage } from '../messageBoard'
+import { boardMessages, fetchBoardMessages, postBoardMessage } from '../messageBoard'
 
 const router = useRouter()
 
-onMounted(() => fetchLeaderboard())
+onMounted(async () => {
+  await fetchLeaderboard()
+  await fetchBoardMessages()
+})
 
 const messageBoardOpen = ref(false)
 const boardForm = ref({
@@ -37,7 +40,7 @@ const getRoleEmoji = (role) => {
   return ''
 }
 
-const submitBoardMessage = () => {
+const submitBoardMessage = async () => {
   boardErrors.value = { message: '' }
   boardStatus.value = ''
 
@@ -47,11 +50,17 @@ const submitBoardMessage = () => {
 
   if (boardErrors.value.message) return
 
-  postBoardMessage({
+  const result = await postBoardMessage({
     name: posterName.value,
     message: boardForm.value.message.trim(),
     role: user.value?.role || 'visitor'
   })
+
+  if (!result.success) {
+    boardErrors.value.message = result.message || t('failedToSend')
+    return
+  }
+
   boardForm.value = { message: '' }
   boardStatus.value = currentLanguage.value === 'lv'
     ? 'Ziņa pievienota ziņojumu dēlim.'

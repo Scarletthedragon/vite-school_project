@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BoardMessageController;
 use App\Http\Controllers\ScoreController;
 
 Route::get('/test', function () {
@@ -10,6 +11,8 @@ Route::get('/test', function () {
 });
 
 Route::post('/contact', [ContactController::class, 'store']);
+Route::get('/board-messages', [BoardMessageController::class, 'index']);
+Route::post('/board-messages', [BoardMessageController::class, 'store']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);

@@ -1,7 +1,5 @@
 import { ref } from 'vue'
-import { getStorageKey, readJson, writeJson } from './storage'
-
-const MESSAGES_KEY = getStorageKey('messages')
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
 const MESSAGE_COLORS = [
   '#ff6b6b',
   '#f59f00',
@@ -31,37 +29,63 @@ const normalizeMessages = (items) => {
       message: String(entry.message || '').trim(),
       role: String(entry.role || 'visitor'),
       color: isValidHexColor(entry.color) ? entry.color : getRandomMessageColor(),
-      createdAt: entry.createdAt || new Date().toISOString()
+      createdAt: entry.createdAt || entry.created_at || new Date().toISOString()
     }))
     .filter((entry) => entry.message.length > 0)
 }
 
-const messages = ref(normalizeMessages(readJson(MESSAGES_KEY, [])))
-writeJson(MESSAGES_KEY, messages.value)
-
-const saveMessages = () => {
-  writeJson(MESSAGES_KEY, messages.value)
-}
+const messages = ref([])
 
 export const boardMessages = messages
 
-export const postBoardMessage = (payload) => {
+export const fetchBoardMessages = async () => {
+  try {
+    const res = await fetch(`${API}/api/board-messages`, {
+      headers: { Accept: 'application/json' },
+    })
+
+    if (!res.ok) {
+      return { success: false, message: 'Failed to load messages' }
+    }
+
+    const data = await res.json().catch(() => [])
+    messages.value = normalizeMessages(data)
+    return { success: true }
+  } catch {
+    return { success: false, message: 'Could not connect to server' }
+  }
+}
+
+export const postBoardMessage = async (payload) => {
   const name = String(payload?.name || 'Visitor').trim()
   const message = String(payload?.message || '').trim()
   const role = String(payload?.role || 'visitor')
+  const color = getRandomMessageColor()
 
-  if (!message) return false
+  if (!message) return { success: false, message: 'Message is required' }
 
-  messages.value.unshift({
-    id: Date.now(),
-    name,
-    message,
-    role,
-    color: getRandomMessageColor(),
-    createdAt: new Date().toISOString()
-  })
+  try {
+    const res = await fetch(`${API}/api/board-messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ name, message, role, color }),
+    })
 
-  messages.value = messages.value.slice(0, 30)
-  saveMessages()
-  return true
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      return { success: false, message: data?.message || 'Failed to save message' }
+    }
+
+    const normalized = normalizeMessages([data.message])
+    if (normalized.length) {
+      messages.value.unshift(normalized[0])
+      messages.value = messages.value.slice(0, 30)
+    } else {
+      await fetchBoardMessages()
+    }
+
+    return { success: true }
+  } catch {
+    return { success: false, message: 'Could not connect to server' }
+  }
 }
