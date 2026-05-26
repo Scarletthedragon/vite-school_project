@@ -16,6 +16,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/make-admin', [AuthController::class, 'makeAdmin']);
 Route::post('/delete-user', [AuthController::class, 'deleteUser']);
+Route::post('/delete-account', [AuthController::class, 'deleteAccount']);
 
 Route::get('/leaderboard', [ScoreController::class, 'leaderboard']);
 Route::post('/scores/add', [ScoreController::class, 'addPoints']);

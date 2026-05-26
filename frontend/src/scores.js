@@ -1,21 +1,3 @@
-// Delete a user by email (admin only)
-export const deleteUser = async (email) => {
-  if (!email) return { success: false };
-  try {
-    const res = await fetch(`${API}/api/delete-user`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    if (res.ok && data.success) {
-      await fetchLeaderboard();
-    }
-    return data;
-  } catch (e) {
-    return { success: false, message: e?.message || 'Error' };
-  }
-};
 import { ref } from 'vue'
 import { user } from './auth'
 
@@ -74,6 +56,39 @@ export const awardScore = async (email, points) => {
     })
     await fetchLeaderboard()
   } catch {}
+}
+
+// Delete a user by email (admin only)
+export const deleteUserByAdmin = async (email, actorEmail) => {
+  if (!email || !actorEmail) return { success: false, message: 'Missing user data' }
+  try {
+    const res = await fetch(`${API}/api/delete-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email, actor_email: actorEmail }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (res.ok && data.success) {
+      await fetchLeaderboard()
+    }
+    return data
+  } catch (e) {
+    return { success: false, message: e?.message || 'Error deleting user' }
+  }
+}
+
+export const deleteOwnAccount = async (email, password) => {
+  if (!email || !password) return { success: false, message: 'Missing credentials' }
+  try {
+    const res = await fetch(`${API}/api/delete-account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    return await res.json().catch(() => ({ success: false, message: 'Invalid server response' }))
+  } catch (e) {
+    return { success: false, message: e?.message || 'Error deleting account' }
+  }
 }
 
 export const getScore = (email) => {

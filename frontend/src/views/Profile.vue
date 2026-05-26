@@ -3,14 +3,23 @@ import { ref, computed, onMounted } from 'vue'
 import { user, logout } from '../auth'
 import { useRouter } from 'vue-router'
 import { t } from '../i18n'
-import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard, deleteUser } from '../scores'
+import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard, deleteUserByAdmin, deleteOwnAccount } from '../scores'
 const deleteMessage = ref('')
 const deleting = ref({})
+const selfDeleting = ref(false)
+const selfDeleteMessage = ref('')
 
 const handleDeleteUser = async (email, name) => {
+  if (!user.value?.email) return
+  if (email === user.value.email) {
+    deleteMessage.value = 'Use Delete My Account to remove your own account.'
+    setTimeout(() => { deleteMessage.value = '' }, 3500)
+    return
+  }
+
   if (!confirm(`Delete user ${name} (${email})? This cannot be undone!`)) return;
   deleting.value[email] = true;
-  const res = await deleteUser(email);
+  const res = await deleteUserByAdmin(email, user.value.email);
   if (res.success) {
     deleteMessage.value = `🗑️ User ${name} deleted.`;
     setTimeout(() => { deleteMessage.value = '' }, 3000);
@@ -19,6 +28,31 @@ const handleDeleteUser = async (email, name) => {
     setTimeout(() => { deleteMessage.value = '' }, 4000);
   }
   deleting.value[email] = false;
+}
+
+const handleDeleteMyAccount = async () => {
+  if (!user.value?.email || user.value?.role === 'visitor') return
+
+  const password = prompt('Enter your password to delete your account:')
+  if (!password) return
+
+  if (!confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) return
+
+  selfDeleting.value = true
+  const res = await deleteOwnAccount(user.value.email, password)
+
+  if (res.success) {
+    selfDeleteMessage.value = 'Your account was deleted.'
+    logout()
+    setTimeout(() => {
+      router.push('/login')
+    }, 300)
+  } else {
+    selfDeleteMessage.value = res.message || 'Failed to delete account.'
+  }
+
+  setTimeout(() => { selfDeleteMessage.value = '' }, 4000)
+  selfDeleting.value = false
 }
 
 const router = useRouter()
@@ -56,7 +90,7 @@ const handleMakeAdmin = async (email, name) => {
     const res = await fetch(`${API}/api/make-admin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, actor_email: user.value?.email }),
     })
 
     const data = await res.json().catch(() => ({}))
@@ -152,6 +186,18 @@ onMounted(() => fetchLeaderboard())
           >
             {{ t('logout') }}
           </button>
+
+          <button
+            class="create-btn"
+            @click="handleDeleteMyAccount"
+            :disabled="selfDeleting"
+            style="margin-top: 0.8rem; width: 100%; background: #c0392b; color: #fff;"
+          >
+            <span v-if="!selfDeleting">Delete My Account</span>
+            <span v-else>Deleting...</span>
+          </button>
+
+          <p v-if="selfDeleteMessage" style="margin-top: 0.6rem; color: #e74c3c; font-weight: bold;">{{ selfDeleteMessage }}</p>
         </div>
 
         <div v-if="isAdmin" style="margin-top: 2rem; padding: 1rem; background: rgba(243,156,18,0.15); border-radius: 8px; border-left: 4px solid #f39c12; color: var(--text-color);">
@@ -185,12 +231,9 @@ onMounted(() => fetchLeaderboard())
           </div>
 
           <p v-if="awardMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ awardMessage }}</p>
-<<<<<<< HEAD:src/views/Profile.vue
           <p v-if="deleteMessage" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ deleteMessage }}</p>
-=======
           <p v-if="adminMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ adminMessage }}</p>
           <p v-if="adminError" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ adminError }}</p>
->>>>>>> b066e85940643063d2284cb21d1a9b98021e004b:frontend/src/views/Profile.vue
 
           <div>
             <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed;">
@@ -229,7 +272,6 @@ onMounted(() => fetchLeaderboard())
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                       >➕</button>
                       <button
-<<<<<<< HEAD:src/views/Profile.vue
                         @click="handleDeleteUser(u.email, u.name)"
                         :disabled="deleting[u.email]"
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap; margin-left: 0.3rem;"
@@ -238,13 +280,12 @@ onMounted(() => fetchLeaderboard())
                         <span v-if="!deleting[u.email]">🗑️</span>
                         <span v-else>...</span>
                       </button>
-=======
+                      <button
                         v-if="u.role !== 'admin'"
                         @click="handleMakeAdmin(u.email, u.name)"
-                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
+                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #8e44ad; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                         title="Promote to admin"
                       >👑</button>
->>>>>>> b066e85940643063d2284cb21d1a9b98021e004b:frontend/src/views/Profile.vue
                     </div>
                   </td>
                 </tr>
