@@ -22,6 +22,7 @@ const handleDeleteUser = async (email, name) => {
 }
 
 const router = useRouter()
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
 
 const handleLogout = () => {
   logout()
@@ -30,6 +31,8 @@ const handleLogout = () => {
 
 // Admin: award points
 const awardMessage = ref('')
+const adminMessage = ref('')
+const adminError = ref('')
 const userFilter = ref('')
 const roleFilter = ref('all')
 const sortBy = ref('name-asc')
@@ -41,6 +44,41 @@ const handleRowAward = async (email, name) => {
   await awardScore(email, pts)
   awardMessage.value = `✅ +${pts} punkti piešķirti ${name}`
   setTimeout(() => { awardMessage.value = '' }, 3000)
+}
+
+const handleMakeAdmin = async (email, name) => {
+  if (!email) return
+
+  adminMessage.value = ''
+  adminError.value = ''
+
+  try {
+    const res = await fetch(`${API}/api/make-admin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      adminError.value = data?.message ?? 'Failed to promote user'
+      return
+    }
+
+    adminMessage.value = `✅ ${name} is now an admin`
+    await fetchLeaderboard()
+
+    // If current user promoted themselves, reflect it immediately in UI/session.
+    if (user.value?.email === email) {
+      user.value = { ...user.value, role: 'admin', is_admin: true }
+      localStorage.setItem('user', JSON.stringify(user.value))
+      localStorage.setItem('userRole', 'admin')
+    }
+
+    setTimeout(() => { adminMessage.value = '' }, 3000)
+  } catch {
+    adminError.value = 'Could not connect to server'
+  }
 }
 
 // Users loaded from leaderboard API
@@ -62,14 +100,7 @@ const filteredUsers = computed(() => {
   return result
 })
 
-const makeAdmin = async () => {
-  await fetch('https://vite-schoolproject-production.up.railway.app/api/make-admin', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: user.email }),
-  });
-  alert('You are now an admin! Please log out and log in again to see changes.');
-}
+const isAdmin = computed(() => user.value?.role === 'admin' || user.value?.is_admin)
 
 onMounted(() => fetchLeaderboard())
 </script>
@@ -123,7 +154,7 @@ onMounted(() => fetchLeaderboard())
           </button>
         </div>
 
-        <div v-if="user?.role === 'admin'" style="margin-top: 2rem; padding: 1rem; background: rgba(243,156,18,0.15); border-radius: 8px; border-left: 4px solid #f39c12; color: var(--text-color);">
+        <div v-if="isAdmin" style="margin-top: 2rem; padding: 1rem; background: rgba(243,156,18,0.15); border-radius: 8px; border-left: 4px solid #f39c12; color: var(--text-color);">
           <h4>{{ t('adminPanel') }}</h4>
 
           <div style="margin-top: 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
@@ -154,7 +185,12 @@ onMounted(() => fetchLeaderboard())
           </div>
 
           <p v-if="awardMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ awardMessage }}</p>
+<<<<<<< HEAD:src/views/Profile.vue
           <p v-if="deleteMessage" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ deleteMessage }}</p>
+=======
+          <p v-if="adminMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ adminMessage }}</p>
+          <p v-if="adminError" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ adminError }}</p>
+>>>>>>> b066e85940643063d2284cb21d1a9b98021e004b:frontend/src/views/Profile.vue
 
           <div>
             <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed;">
@@ -193,6 +229,7 @@ onMounted(() => fetchLeaderboard())
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                       >➕</button>
                       <button
+<<<<<<< HEAD:src/views/Profile.vue
                         @click="handleDeleteUser(u.email, u.name)"
                         :disabled="deleting[u.email]"
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap; margin-left: 0.3rem;"
@@ -201,6 +238,13 @@ onMounted(() => fetchLeaderboard())
                         <span v-if="!deleting[u.email]">🗑️</span>
                         <span v-else>...</span>
                       </button>
+=======
+                        v-if="u.role !== 'admin'"
+                        @click="handleMakeAdmin(u.email, u.name)"
+                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
+                        title="Promote to admin"
+                      >👑</button>
+>>>>>>> b066e85940643063d2284cb21d1a9b98021e004b:frontend/src/views/Profile.vue
                     </div>
                   </td>
                 </tr>
