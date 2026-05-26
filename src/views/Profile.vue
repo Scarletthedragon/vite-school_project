@@ -3,7 +3,23 @@ import { ref, computed, onMounted } from 'vue'
 import { user, logout } from '../auth'
 import { useRouter } from 'vue-router'
 import { t } from '../i18n'
-import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard } from '../scores'
+import { userScore, awardScore, getScore, fetchLeaderboard, leaderboard, deleteUser } from '../scores'
+const deleteMessage = ref('')
+const deleting = ref({})
+
+const handleDeleteUser = async (email, name) => {
+  if (!confirm(`Delete user ${name} (${email})? This cannot be undone!`)) return;
+  deleting.value[email] = true;
+  const res = await deleteUser(email);
+  if (res.success) {
+    deleteMessage.value = `🗑️ User ${name} deleted.`;
+    setTimeout(() => { deleteMessage.value = '' }, 3000);
+  } else {
+    deleteMessage.value = res.message || 'Failed to delete user.';
+    setTimeout(() => { deleteMessage.value = '' }, 4000);
+  }
+  deleting.value[email] = false;
+}
 
 const router = useRouter()
 
@@ -138,6 +154,7 @@ onMounted(() => fetchLeaderboard())
           </div>
 
           <p v-if="awardMessage" style="color: #27ae60; font-weight: bold; margin-bottom: 0.8rem;">{{ awardMessage }}</p>
+          <p v-if="deleteMessage" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ deleteMessage }}</p>
 
           <div>
             <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed;">
@@ -175,6 +192,15 @@ onMounted(() => fetchLeaderboard())
                         @click="handleRowAward(u.email, u.name)"
                         style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                       >➕</button>
+                      <button
+                        @click="handleDeleteUser(u.email, u.name)"
+                        :disabled="deleting[u.email]"
+                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap; margin-left: 0.3rem;"
+                        title="Delete user"
+                      >
+                        <span v-if="!deleting[u.email]">🗑️</span>
+                        <span v-else>...</span>
+                      </button>
                     </div>
                   </td>
                 </tr>

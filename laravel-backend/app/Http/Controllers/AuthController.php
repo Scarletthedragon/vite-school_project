@@ -7,6 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
+    // Delete a user by email (admin only)
+    public function deleteUser(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+        // Optionally, check if the current user is admin (add your own auth logic here)
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+        }
+        $user->delete();
+        return response()->json(['success' => true, 'message' => 'User deleted.']);
+    }
 {
     public function makeAdmin(Request $request)
     {

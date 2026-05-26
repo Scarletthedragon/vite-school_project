@@ -1,3 +1,21 @@
+// Delete a user by email (admin only)
+export const deleteUser = async (email) => {
+  if (!email) return { success: false };
+  try {
+    const res = await fetch(`${API}/api/delete-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      await fetchLeaderboard();
+    }
+    return data;
+  } catch (e) {
+    return { success: false, message: e?.message || 'Error' };
+  }
+};
 import { ref } from 'vue'
 import { user } from './auth'
 
