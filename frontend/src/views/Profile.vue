@@ -236,13 +236,13 @@ onMounted(() => fetchLeaderboard())
           <p v-if="adminError" style="color: #e74c3c; font-weight: bold; margin-bottom: 0.8rem;">{{ adminError }}</p>
 
           <div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: auto;">
               <thead>
                 <tr style="background: rgba(243,156,18,0.25);">
-                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 22%;">{{ t('adminColName') }}</th>
-                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 30%;">{{ t('adminColEmail') }}</th>
-                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 14%;">{{ t('adminColRole') }}</th>
-                  <th style="text-align: right; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 12%;">{{ t('adminColPoints') }}</th>
+                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 20%;">{{ t('adminColName') }}</th>
+                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 28%;">{{ t('adminColEmail') }}</th>
+                  <th style="text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 16%;">{{ t('adminColRole') }}</th>
+                  <th style="text-align: right; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 14%;">{{ t('adminColPoints') }}</th>
                   <th style="text-align: center; padding: 0.6rem 0.5rem; border-bottom: 2px solid #f39c12; width: 22%;">{{ t('adminColAward') }}</th>
                 </tr>
               </thead>
@@ -253,28 +253,28 @@ onMounted(() => fetchLeaderboard())
                 <tr v-for="u in filteredUsers" :key="u.email" style="border-bottom: 1px solid rgba(243,156,18,0.15);">
                   <td style="padding: 0.6rem 0.5rem; font-weight: bold; word-break: break-word;">{{ u.name }}</td>
                   <td style="padding: 0.6rem 0.5rem; font-size: 0.82rem; opacity: 0.8; word-break: break-all;">{{ u.email }}</td>
-                  <td style="padding: 0.6rem 0.5rem;">
-                    <span v-if="u.role === 'admin'" style="background: #e74c3c; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👑 Admin</span>
-                    <span v-else style="background: #3498db; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👤 User</span>
+                  <td style="padding: 0.6rem 0.5rem; white-space: nowrap;">
+                    <span v-if="u.role === 'admin'" style="display: inline-flex; align-items: center; gap: 0.2rem; background: #e74c3c; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👑 Admin</span>
+                    <span v-else style="display: inline-flex; align-items: center; gap: 0.2rem; background: #3498db; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">👤 User</span>
                   </td>
-                  <td style="padding: 0.6rem 0.5rem; text-align: right; font-weight: bold;">{{ getScore(u.email) }} ⭐</td>
+                  <td style="padding: 0.6rem 0.5rem; text-align: right; font-weight: bold; white-space: nowrap;">{{ getScore(u.email) }} ⭐</td>
                   <td style="padding: 0.6rem 0.5rem;">
-                    <div style="display: flex; gap: 0.4rem; align-items: center; justify-content: center;">
+                    <div style="display: flex; gap: 0.35rem; align-items: center; justify-content: center; flex-wrap: nowrap; white-space: nowrap;">
                       <input
                         type="number"
                         :value="rowPoints[u.email] ?? 10"
                         @input="rowPoints[u.email] = $event.target.value"
                         min="1"
-                        style="width: 60px; padding: 0.3rem 0.4rem; border-radius: 5px; border: 1px solid #ccc; background: var(--card-bg); color: var(--text-color); font-size: 0.85rem;"
+                        style="width: 56px; padding: 0.3rem 0.35rem; border-radius: 5px; border: 1px solid #ccc; background: var(--card-bg); color: var(--text-color); font-size: 0.85rem;"
                       />
                       <button
                         @click="handleRowAward(u.email, u.name)"
-                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
+                        style="padding: 0.3rem 0.55rem; min-width: 34px; border-radius: 5px; border: none; background: #f39c12; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                       >➕</button>
                       <button
                         @click="handleDeleteUser(u.email, u.name)"
                         :disabled="deleting[u.email]"
-                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap; margin-left: 0.3rem;"
+                        style="padding: 0.3rem 0.55rem; min-width: 34px; border-radius: 5px; border: none; background: #e74c3c; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                         title="Delete user"
                       >
                         <span v-if="!deleting[u.email]">🗑️</span>
@@ -283,7 +283,7 @@ onMounted(() => fetchLeaderboard())
                       <button
                         v-if="u.role !== 'admin'"
                         @click="handleMakeAdmin(u.email, u.name)"
-                        style="padding: 0.3rem 0.6rem; border-radius: 5px; border: none; background: #8e44ad; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
+                        style="padding: 0.3rem 0.55rem; min-width: 34px; border-radius: 5px; border: none; background: #8e44ad; color: white; cursor: pointer; font-size: 0.85rem; white-space: nowrap;"
                         title="Promote to admin"
                       >👑</button>
                     </div>
