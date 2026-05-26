@@ -23,7 +23,11 @@ const posterName = computed(() => user.value?.name || (currentLanguage.value ===
 const formattedBoardMessages = computed(() => {
   return boardMessages.value.map((entry) => ({
     ...entry,
-    date: new Date(entry.createdAt).toLocaleString(currentLanguage.value === 'lv' ? 'lv-LV' : 'en-GB')
+    date: new Date(entry.createdAt).toLocaleString(currentLanguage.value === 'lv' ? 'lv-LV' : 'en-GB'),
+    cardStyle: {
+      borderLeft: `4px solid ${entry.color || '#8e44ad'}`,
+      background: `${entry.color || '#8e44ad'}1a`
+    }
   }))
 })
 
@@ -272,7 +276,7 @@ const openGameCategory = (slug) => {
         <p v-if="formattedBoardMessages.length === 0" style="opacity: 0.7;">
           {{ t('noMessages') }}
         </p>
-        <article v-for="entry in formattedBoardMessages" :key="entry.id" class="message-board-item">
+        <article v-for="entry in formattedBoardMessages" :key="entry.id" class="message-board-item" :style="entry.cardStyle">
           <div class="message-board-meta">
             <strong>{{ getRoleEmoji(entry.role) }} {{ entry.name }}</strong>
             <span>{{ entry.date }}</span>
