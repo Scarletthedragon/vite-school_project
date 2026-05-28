@@ -1,86 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend API (Laravel 12)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This folder contains the Dragons Den backend API service.
+
+## Tech Stack
+
+- PHP 8.2+
+- Laravel 12
+- Eloquent ORM
+- Default DB: SQLite
+
+## API Routes
+
+Defined in routes/api.php.
+
+- GET /api/test
+	- Health check style response
+
+- POST /api/login
+	- Payload: email, password
+	- Returns user data with role and is_admin
+
+- POST /api/register
+	- Payload: name, email, password
+	- Creates a new user
+
+- POST /api/make-admin
+	- Payload: email, actor_email
+	- Promotes user when actor_email belongs to an admin
+
+- POST /api/delete-user
+	- Payload: email, actor_email
+	- Deletes another user when actor_email belongs to an admin
+
+- POST /api/delete-account
+	- Payload: email, password
+	- Deletes own account after password check
+
+- GET /api/leaderboard
+	- Returns users sorted by score descending
+
+- POST /api/scores/add
+	- Payload: email, points
+	- Adds or subtracts score (minimum score 0)
+
+- GET /api/board-messages
+	- Returns latest 30 board messages
+
+- POST /api/board-messages
+	- Payload: name, message, role(optional), color(optional hex)
+	- Creates board message
+
+- POST /api/contact
+	- Payload: name, email, subject, message
+	- Validates and echoes response payload
+
+## Data Model Summary
+
+Users table includes:
+
+- name
+- email
+- password
+- role (default user)
+- score (default 0)
+- is_admin (default false)
+
+Board messages table includes:
+
+- name
+- message
+- role (default visitor)
+- color (nullable hex)
+
+## Local Setup
+
+1. composer install
+2. copy .env.example to .env
+3. php artisan key:generate
+4. php artisan migrate --force
+5. php artisan serve --port=8000
+
+Optional one-command bootstrap:
+
+- composer run setup
+
+## Development Scripts
+
+From composer.json:
+
+- composer run dev
+	- Runs artisan serve, queue listener, pail logs, and npm run dev concurrently
+- composer run test
+	- Clears config and runs test suite
+
+## Environment Notes
+
+- DB_CONNECTION defaults to sqlite
+- SQLite file path defaults to database/database.sqlite
+- CORS is currently open to all origins in config/cors.php
 
 ## Railway Deployment
 
-This project includes Railway-ready startup files:
+Deployment files:
 
-- `railway.json` for deployment settings and health check path (`/up`)
-- `railway-start.sh` for startup: optional SQLite file creation, migrations, and server boot
-- `Procfile` that calls `bash ./railway-start.sh`
+- railway.json
+- railway-start.sh
+- Procfile
 
-Set these Railway variables before deploying:
+The startup script:
 
-- `APP_ENV=production`
-- `APP_DEBUG=false`
-- `APP_KEY` (generate with `php artisan key:generate --show` locally)
-- `APP_URL` (your Railway public URL)
-- `CORS_ALLOWED_ORIGINS` (your frontend URL, for example Vercel)
+1. Verifies APP_KEY exists
+2. Creates SQLite file when DB_CONNECTION=sqlite
+3. Validates required Postgres vars when DB_CONNECTION=pgsql
+4. Runs migrations
+5. Starts Laravel server on 0.0.0.0:${PORT:-8080}
 
-For PostgreSQL/MySQL on Railway, also set:
+Recommended Railway environment variables:
 
-- `DB_CONNECTION` (`pgsql` or `mysql`)
-- `DB_HOST`
-- `DB_PORT`
-- `DB_DATABASE`
-- `DB_USERNAME`
-- `DB_PASSWORD`
+- APP_ENV=production
+- APP_DEBUG=false
+- APP_KEY
+- APP_URL
+- DB_CONNECTION=sqlite (or pgsql/mysql)
 
-If you do not attach a DB service, keep `DB_CONNECTION=sqlite`.
+If using PostgreSQL, also set:
 
-## About Laravel
+- DB_HOST
+- DB_PORT
+- DB_DATABASE
+- DB_USERNAME
+- DB_PASSWORD
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Current Security/Behavior Notes
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- API auth actions are request-payload driven (email and actor_email checks), not token-guarded.
+- Contact endpoint does not send outbound email by default.
